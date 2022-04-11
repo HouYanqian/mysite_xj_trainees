@@ -1,0 +1,100 @@
+.color-red {
+    color: #FF5722 !important;
+}
+
+.color-yellow {
+    color: #FFB800 !important;
+}
+
+.color-green {
+    color: #009688 !important;
+}
+
+.color-cyan {
+    color: #2F4056 !important;
+}
+
+.color-blue {
+    color: #1E9FFF !important;
+}
+
+.color-black {
+    color: #393D49 !important;
+}
+
+.color-gray {
+    color: #EEEEEE !important;
+}
+
+.color-darkgray {
+    color: #666666 !important;
+}
+
+.layuiadmin-badge {
+    /*top:50%;*/
+    /*margin-top:-9px;*/
+}
+
+p.layuiadmin-big-font {
+    font-size: 24px;
+    color: #666666;
+    /*line-height: 36px;*/
+    /*padding: 5px 0 10px;*/
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
+    /*word-break: break-all;*/
+    /*white-space: nowrap;*/
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.form-item-margin {
+    margin: 10px;
+}
+
+
+.grid-demo {
+    border-radius: 2px;
+    padding: 10px;
+    text-align: center;
+}
+.grid-demo-bg1 {
+    background-color: #eeeeee;
+}
+.grid-demo h1 {
+    font-weight: bold;
+    color: #333333;
+}
+.grid-demo p {
+    color: #999999;
+}
+/*上下班时间*/
+.x-admin-backlog-body .new-cite {
+    font-size: 18px!important;
+    color: #333333;
+}
+
+#layui-laydate1 .layui-laydate-main .layui-badge-dot {
+    width: 4px;
+    height: 4px;
+    position: absolute;
+    top: 25px;
+    left: 16px;
+
+}
+#layui-laydate1 .layui-laydate-content td {
+    height: 36px;
+    border-radius: 50%;
+}
+#layui-laydate1 .layui-laydate-footer .daily-btn {
+    width: 30px;
+}

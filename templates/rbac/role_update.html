@@ -1,0 +1,245 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>更新</title>
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}" media="all">
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .layui-laydate-content > .layui-laydate-list {
+            padding-bottom: 0;
+            overflow: hidden;
+        }
+
+        .layui-laydate-content > .layui-laydate-list > li {
+            width: 50%;
+        }
+
+        .merge-box .scrollbox .merge-list {
+            padding-bottom: 5px;
+        }
+
+    </style>
+</head>
+<body>
+<blockquote class="layui-elem-quote layui-text">
+    <h3>更新</h3>
+</blockquote>
+
+<form id="addForm" class="layui-form" action="">
+    {% csrf_token %}
+    <input name="id" hidden value="{{ role_record.id }}">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">角色名</label>
+            <div class="layui-input-inline">
+                <input placeholder="考勤组名" type="text" name="title" lay-verify="required"
+                       class="layui-input"
+                       value="{{ role_record.title }}">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">拥有权限</label>
+        <div class="layui-input-block">
+            <div id="permissions" class="demo-transfer"></div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script src="{% static 'layui/layui.js' %}" charset="utf-8"></script>
+<script src="{% static 'jquery-3.4.1.js' %}" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'transfer'], function () {
+        var form = layui.form
+            , layer = layui.layer
+            , tree = layui.tree;
+
+
+        //监听提交
+        form.on('submit(demo1)', function () {
+            var data = $("#addForm").serialize();
+            $.ajax({
+                type: "post",
+                url: "{% url '[rbac]:role-update' %}",
+                data: data,
+                cache: false,
+                beforeSend: function () {
+                    this.layerIndex = layer.load(1, {
+                        shade: [0.1, '#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success: function (msg) {
+                    layer.closeAll('loading');
+                    if (msg.status === 'success') {
+                        layer.alert('更新成功！', {icon: 1}, function (index) {
+                            parent.layer.closeAll(); //关闭所有弹窗
+                        });
+                    } else if (msg.status === 'fail') {
+                        layer.msg(msg.form_errors, {icon: 5, shift: 6});
+                    }
+                }
+            });
+            return false;
+        });
+        form.verify({
+            ip: function (value) {
+                if (value && !/^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$/.test(value)) {
+                    return 'ip地址格式错误';
+                }
+            },
+        });
+
+        //基本演示
+        tree.render({
+            elem: '#permissions'
+            , data: {{ role_permissions_trees|safe }}
+            , showCheckbox: true  //是否显示复选框
+            , id: 'demoId1'
+            , isJump: true //是否允许点击节点时弹出新窗口跳转
+            , onlyIconControl: true
+            , click: function (obj) {
+                console.log(obj)
+                var id = obj.data.id;
+                $.ajax({
+                    type: 'get',
+                    url: "{% url '[rbac]:menu-edit' %}",
+                    data: {
+                        "id": id,
+                        "field": "url"
+                    },
+                    cache: false,
+                    success: function (msg) {
+                        layer.prompt({
+                            formType: 3,
+                            value: msg.url,
+                            title: "菜单名",
+                        }, function (value, index, elem) {
+                            layer.close(index);
+                            doEdit(id, "url", value)
+                        });
+
+                    }
+                });
+
+
+            }
+            , edit: ['add', 'update', 'del'] //操作节点的图标
+            , operate: function (obj) {
+                var type = obj.type; //得到操作类型：add、edit、del
+                var elem = obj.elem; //得到当前节点元素
+
+                //Ajax 操作
+                var id = elem.find('input').val(); //得到节点索引
+                if (type === 'add') { //增加节点
+                    var title;
+                    layer.prompt({
+                        formType: 3,
+                        value: '未命名',
+                        title: '菜单名',
+                        btn2 : function() {
+                            $("div[data-id=undefined]").remove()
+                        }, cancel: function () {
+                            $("div[data-id=undefined]").remove()
+                        }
+                    }, function (value, index, elem) {
+                        $("div[data-id=undefined] span.layui-tree-txt").text(value)
+                        layer.close(index);
+                        $.ajax({
+                            type: "post",
+                            url: "{% url '[rbac]:menu-add' %}",
+                            data: {parent_id: id, title: value, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                            cache: false,
+                            beforeSend: function () {
+                                this.layerIndex = layer.load(1, {
+                                    shade: [0.1, '#fff'] //0.1透明度的白色背景
+                                });
+                            },
+                            success: function (msg) {
+                                layer.closeAll('loading');
+                                if (msg.status === 'success') {
+                                    $("input[name=layuiTreeCheck_undefined]").val(msg.id).attr("name", "layuiTreeCheck_" + msg.id)
+                                    $("div[data-id=undefined]").attr("data-id", msg.id)
+                                    layer.msg('更新成功！', {icon: 1});
+                                } else if (msg.status === 'fail') {
+                                    $("div[data-id=undefined]").remove()
+                                    layer.msg(msg.form_errors, {icon: 5, shift: 6});
+                                }
+                            }
+                        });
+                    });
+                } else if (type === 'update') {
+                    doEdit(id, "title", elem.find('.layui-tree-txt').html())
+                } else if (type === 'del') { //删除节点
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url '[rbac]:menu-del' %}",
+                        data: {"id": id, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                        cache: false,
+                        success: function (msg) {
+                            if (msg.result) {
+                                layer.msg("删除成功", {icon: 1});
+                            } else {
+                                layer.msg("删除失败", {icon: 2});
+                            }
+                        }
+                    });
+
+                }
+            }
+        });
+        var role_record_permissions = {{ role_record_permissions }};
+        $.each(role_record_permissions, function (index, value) {
+            $("input[name=layuiTreeCheck_" + value + "]").prop("checked", true).siblings(".layui-form-checkbox").addClass("layui-form-checked")    // 选中拥有权限
+        })
+
+        //编辑
+        function doEdit(id, field, value) {
+            $.ajax({
+                type: 'post',
+                url: "{% url '[rbac]:menu-edit' %}",
+                data: {
+                    "id": id,
+                    "field": field,
+                    "value": value,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                cache: false,
+                beforeSend: function () {
+                    this.layerIndex = layer.load(1, {
+                        shade: [0.1, '#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success: function (msg) {
+                    layer.closeAll('loading');
+                    if (msg.status === 'success') {
+                        layer.msg('修改成功！', {icon: 1});
+                    } else if (msg.status === 'error') {
+                        layer.msg('输入类型错误！', {icon: 5});
+                    } else if (msg.status === 'hint') {
+                        layer.msg('注意！', {icon: 0});
+                    } else {
+                        layer.msg('没有编辑权限', {icon: 4});
+                    }
+                }
+            });
+        }
+
+
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,187 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>更新</title>
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}" media="all">
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .demo-carousel {
+            height: 200px;
+            line-height: 200px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<blockquote class="layui-elem-quote layui-text">
+    <h3>更新</h3>
+</blockquote>
+
+<form id="addForm" class="layui-form" action="">
+    {% csrf_token %}
+    <input type="hidden" name='id' value="{{ trainees_interview_record.id }}"/>
+    <input type="hidden" name='name' value="{{ trainees_interview_record.name_id }}"/>
+    <fieldset class="layui-elem-field">
+        <legend style="font-size: 8px; color: #e6e6e6;">重要指标</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <label class="layui-form-label">家庭基本情况</label>
+                <div class="layui-input-inline">
+                    <input placeholder="父母工作、身体状况" title="父母工作、身体状况" type="number" name="target_1"
+                          lay-verify="required|number" class="layui-input"
+                           value="{{ trainees_interview_record.target_1 }}">
+                </div>
+                <div class="layui-input-inline">
+                    <input placeholder="兄妹学习、⼯作、⽣活状况" title="兄妹学习、⼯作、⽣活状况" type="number" name="target_2" lay-verify="required|number"
+                           class="layui-input" value="{{ trainees_interview_record.target_2 }}">
+                </div>
+                <div class="layui-input-inline">
+                    <input placeholder="家庭整体收⽀情况" title="家庭整体收⽀情况" type="number" name="target_3" lay-verify="required|number"
+                           class="layui-input" value="{{ trainees_interview_record.target_3 }}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">身体状况</label>
+                <div class="layui-input-inline">
+                    <input placeholder="本⼈身体状况" title="本⼈身体状况" type="number" name="target_4" lay-verify="required|number"
+                           class="layui-input" value="{{ trainees_interview_record.target_4 }}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">对学习和⼯作的态度</label>
+                <div class="layui-input-inline">
+                    <input placeholder="学习习惯、持续时间" title="学习习惯、持续时间" type="number" name="target_5"
+                           lay-verify="required|number" class="layui-input"
+                           value="{{ trainees_interview_record.target_5 }}">
+                </div>
+                <div class="layui-input-inline">
+                    <input placeholder="社会实践获得的收益情况和对过程的感受" title="社会实践获得的收益情况和对过程的感受" type="number" name="target_6"
+                           lay-verify="required|number" class="layui-input"
+                           value="{{ trainees_interview_record.target_6 }}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">潜在易动因素</label>
+                <div class="layui-input-inline">
+                    <input placeholder="家庭诱导因素（⽗⺟管教的⼒度、⽗⺟的沟通情况）" title="家庭诱导因素（⽗⺟管教的⼒度、⽗⺟的沟通情况）" type="number"
+                           name="target_7" lay-verify="required|number" class="layui-input"
+                           value="{{ trainees_interview_record.target_7 }}">
+                </div>
+                <div class="layui-input-inline">
+                    <input placeholder="朋友圈影响因素（与朋友关系的密切程度、朋友的环境因素、朋友对⽣活的态度积极消极的占⽐）"
+                           title="朋友圈影响因素（与朋友关系的密切程度、朋友的环境因素、朋友对⽣活的态度积极消极的占⽐）" type="number" name="target_8"
+                           lay-verify="required|number" class="layui-input"
+                           value="{{ trainees_interview_record.target_8 }}">
+                </div>
+                <div class="layui-input-inline">
+                    <input placeholder="⾏业了解程度（了解的⽅式与途径、对其他⾏业了解的状况和程度）" title="⾏业了解程度（了解的⽅式与途径、对其他⾏业了解的状况和程度）"
+                           type="number" name="target_9" lay-verify="required|number"
+                           class="layui-input" value="{{ trainees_interview_record.target_9 }}">
+                </div>
+                <div class="layui-input-inline">
+                    <input placeholder="性格因素（表达）" title="性格因素（表达）" type="number" name="target_10"
+                           lay-verify="required|number" class="layui-input"
+                           value="{{ trainees_interview_record.target_10 }}">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<blockquote class="layui-elem-quote layui-quote-nm" id="footer">:</blockquote>
+
+<script src="{% static 'layui/layui.js' %}" charset="utf-8"></script>
+<script src="{% static 'jquery-3.4.1.js' %}" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', "slider"], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            laydate = layui.laydate,
+            slider = layui.slider;
+
+        //日期
+        laydate.render({
+            elem: '#date'
+            , done: function (value) {
+                var new_value = value.replace(/-/g, '') + '{{ number }}';
+                $("#number").attr("value", new_value.slice(2))
+            }
+        });
+
+        //监听提交
+        form.on('submit(demo1)', function () {
+            {#layer.alert(JSON.stringify(data.field), {#}
+            {#  title: '最终的提交信息'#}
+            {# });#}
+            var data = $("#addForm").serialize();
+            $.ajax({
+                type: "post",
+                url: "{% url '[trainees]:info-interview-update' %}",
+                data: data,
+                cache: false,
+                beforeSend: function () {
+                    this.layerIndex = layer.load(1, {
+                        shade: [0.1, '#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success: function (msg) {
+                    layer.closeAll('loading');
+                    if (msg.status === 'success') {
+                        layer.alert('工单保存成功！', {icon: 1}, function (index) {
+                            parent.layer.closeAll(); //关闭所有弹窗
+                        });
+                    } else if (msg.status === 'fail') {
+                        layer.msg(msg.form_errors, {icon: 5, shift: 6});
+                    }
+                }
+            });
+            return false;
+        });
+        form.verify({
+            ip: function (value) {
+                if (value && !/^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$/.test(value)) {
+                    return 'ip地址格式错误';
+                }
+            },
+            mac: function (value) {
+                if (value && !/^[A-F0-9]{2}([-:]?[A-F0-9]{2})([-:.]?[A-F0-9]{2})([-:]?[A-F0-9]{2})([-:.]?[A-F0-9]{2})([-:]?[A-F0-9]{2})$/.test(value)) {
+                    return 'mac地址格式错误';
+                }
+            }
+        });
+    });
+</script>
+<script>
+    // 表单数据状态栏显示
+    $("form input").hover(function () {
+        if ($(this).val()) {
+            $("#footer").text($(this).attr("placeholder")+": "+$(this).val()).removeClass("layui-quote-nm")
+        } else {
+            $("#footer").text("空")
+        }
+    }, function (){
+        $("#footer").text(":").addClass("layui-quote-nm")
+    })
+    // 限制表单输入
+    $("form input[type=number]").on("input propertychange", function () {
+        if ($(this).val() < 0) {
+            $(this).val(0)
+        } else if ($(this).val() > 100) {
+            $(this).val(100)
+        }
+    })
+
+</script>
+</body>
+</html>

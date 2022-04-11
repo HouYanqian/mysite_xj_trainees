@@ -1,0 +1,357 @@
+{% extends 'iframe_base.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="/static/css/guide.css">
+    <link rel="stylesheet" href="/static/plugin/swiper/swiper-bundle.min.css">
+{% endblock %}
+{% block content %}
+    <div class="swiper-pagination" style="box-shadow: 0px 0px 1px 0px #333;"></div>
+    <div id="bubbles"></div>
+    <div id="intro">
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-sm12">
+                    <fieldset class="layui-elem-field layui-field-title" style="margin: 30px 0px;">
+                        <legend>首次面试·信息录入向导</legend>
+                    </fieldset>
+                    <form id="addForm" class="layui-form" action="">
+                        {% csrf_token %}
+                        <input name="name" hidden value="{{ name_id }}">
+                        <div class="swiper">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <fieldset class="layui-elem-field">
+                                        <legend>第一步: 重要指标 <span style="color: #fff">0</span></legend>
+                                        <div class="layui-field-box">
+
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">家庭基本情况</label>
+                                                <div class="layui-input-block stop-swiping">
+                                                    <div id="slide1" class="slider-custom"></div>
+                                                    <div class="slider-tips-custom">
+                                                        父母工作、身体状况: <input type="number" name="target_1"
+                                                                          style="color:#fff; background: none; border: none; width: 36px"
+                                                                          value="0">
+                                                    </div>
+                                                    <div id="slide2" class="slider-custom"></div>
+                                                    <div class="slider-tips-custom">
+                                                        兄妹学习、⼯作、⽣活状况: <input type="number" name="target_2"
+                                                                             style="color:#fff; background: none; border: none; width: 36px"
+                                                                             value="0">
+                                                    </div>
+                                                    <div id="slide3" class="slider-custom"></div>
+                                                    <div class="slider-tips-custom">
+                                                        家庭整体收⽀情况: <input type="number" name="target_3"
+                                                                         style="color:#fff; background: none; border: none; width: 36px"
+                                                                         value="0">
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                            <br>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">身体状况</label>
+                                                <div class="layui-input-block stop-swiping">
+                                                    <div id="slide4" class="slider-custom"></div>
+                                                    <div class="slider-tips-custom">
+                                                        本⼈身体状况: <input type="number" name="target_4"
+                                                                       style="color:#fff; background: none; border: none; width: 36px"
+                                                                       value="0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">对学习和⼯作的态度</label>
+                                                <div class="layui-input-block stop-swiping">
+                                                    <div id="slide5" class="slider-custom"></div>
+                                                    <div class="slider-tips-custom">
+                                                        学习习惯、持续时间: <input type="number" name="target_5"
+                                                                          style="color:#fff; background: none; border: none; width: 36px"
+                                                                          value="0">
+                                                    </div>
+                                                    <div id="slide6" class="slider-custom"></div>
+                                                    <div class="slider-tips-custom">
+                                                        社会实践获得的收益情况和对过程的感受: <input type="number" name="target_6"
+                                                                                   style="color:#fff; background: none; border: none; width: 36px"
+                                                                                   value="0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">潜在易动因素</label>
+                                                <div class="layui-input-block stop-swiping">
+                                                    <div id="slide7" class="slider-custom"></div>
+                                                    <div class="slider-tips-custom">
+                                                        家庭诱导因素（⽗⺟管教的⼒度、⽗⺟的沟通情况）: <input type="number" name="target_7"
+                                                                                        style="color:#fff; background: none; border: none; width: 36px"
+                                                                                        value="0">
+                                                    </div>
+                                                    <div id="slide8" class="slider-custom"></div>
+                                                    <div class="slider-tips-custom">
+                                                        朋友圈影响因素（与朋友关系的密切程度、朋友的环境因素、朋友对⽣活的态度积极消极的占⽐）: <input
+                                                            type="number" name="target_8"
+                                                            style="color:#fff; background: none; border: none; width: 36px"
+                                                            value="0">
+                                                    </div>
+                                                    <div id="slide9" class="slider-custom"></div>
+                                                    <div class="slider-tips-custom">
+                                                        ⾏业了解程度（了解的⽅式与途径、对其他⾏业了解的状况和程度）: <input type="number"
+                                                                                               name="target_9"
+                                                                                               style="color:#fff; background: none; border: none; width: 36px"
+                                                                                               value="0">
+                                                    </div>
+                                                    <div id="slide10" class="slider-custom"></div>
+                                                    <div class="slider-tips-custom">
+                                                        性格因素（表达）: <input type="number" name="target_10"
+                                                                         style="color:#fff; background: none; border: none; width: 36px"
+                                                                         value="0">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="swiper-slide">
+                                    <fieldset class="layui-elem-field">
+                                        <legend>第二步: 声像采集</legend>
+                                        <div class="layui-field-box">
+                                            <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">照片录入</label>
+                                                    <div class="layui-input-inline">
+
+                                                        <div class="layui-upload">
+                                                            <div class="layui-upload-img">
+                                                                <label class="layui-upload-ico">
+                                                                    <input type="file" class="sr-only"
+                                                                           id="upload"
+                                                                           name="image"
+                                                                           capture="camera"
+                                                                           accept="image/*">
+                                                                    <i class="layui-icon layui-icon-camera-fill"></i>
+                                                                </label>
+                                                                <img id="upload_img" {% if trainees.image %}src="{{ MEDIA_URL }}{{ trainees.image }}"{% endif %}>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn layui-btn-normal layui-btn-radius"
+                                        style="display: none"></button>
+                                <button type="button" id="next_slide"
+                                        class="layui-btn layui-btn-normal layui-btn-radius">
+                                    下一步
+                                </button>
+                                <button type="submit" id="submit_form" style="display: none"
+                                        class="layui-btn layui-btn-normal layui-btn-radius"
+                                        lay-submit="">提交
+                                </button>
+                                <button type="button" id="prev_slide" style="display: none"
+                                        class="layui-btn layui-btn-normal layui-btn-radius">
+                                    上一步
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary layui-btn-radius">重置
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block custom_js %}
+    <script src="{% static 'plugin/bubbler/bubbler.js' %}"></script>
+    <script src="{% static 'plugin/swiper/swiper-bundle.min.js' %}"></script>
+    <script>
+        layui.use(["form", "slider", "laydate", "upload"], function () {
+            var $ = layui.$,
+                form = layui.form,
+                laydate = layui.laydate,
+                upload = layui.upload,
+                slider = layui.slider;
+
+            // 日期
+            laydate.render({
+                elem: '#date'
+                , done: function (value) {
+                    var new_value = value.replace(/-/g, '') + '{{ number }}';
+                    $("#number").attr("value", new_value.slice(2))
+                }
+            });
+
+            // 彩色滑块
+            $.each($(".slider-custom"), function () {
+                var tips_value = $(this).next().children("input");
+                var new_slider = slider.render({
+                    elem: "#" + $(this).attr("id"),
+                    value: tips_value.val(),
+                    tips: false, //关闭默认提示层
+                    theme: '#1E9FFF', //主题色
+                    change: function (value) {
+                        tips_value.val(value);
+                        flush_total()
+                    }
+                });
+                tips_value.on("input propertychange", function () {
+                    new_slider.setValue(tips_value.val())
+                })
+            });
+
+            function flush_total() {
+                var total = 0;
+                $("input[type=number]").each(function () {
+                    total += Number($(this).val())
+                });
+                $("legend span").text(total)
+            }
+
+            // 文件上传
+            var uploadInst = upload.render({
+                elem: '#upload'
+                , url: '{% url 'upload_img' %}' //此处用的是第三方的 http 请求演示，实际使用时改成您自己的上传接口即可。
+                , data: {user_id: {{ name_id }}, csrfmiddlewaretoken: '{{ csrf_token }}'}
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#upload_img').attr('src', result); //图片链接（base64）
+                    });
+                    layer.msg('上传中', {icon: 16, time: 0});
+                }, done: function (res, index, upload) {
+                    layer.closeAll(); //关闭loading
+                    if (msg.status === 'success') {
+                        layer.msg('修改成功！', {icon: 1});
+                    } else if (msg.status === 'error') {
+                        layer.msg('输入类型错误！', {icon: 5});
+                    } else if (msg.status === 'hint') {
+                        layer.msg('注意！', {icon: 0});
+                    } else {
+                        layer.msg('没有编辑权限', {icon: 4});
+                    }
+                }
+                , error: function (index, upload) {
+                    console.log(res, index, upload)
+                    layer.closeAll(); //关闭loading
+                }
+
+            });
+
+            //监听提交
+            form.on('submit()', function () {
+                var data = $("#addForm").serialize();
+                $.ajax({
+                    type: "post",
+                    url: "{% url '[trainees]:info-interview-guide' %}",
+                    data: data,
+                    cache: false,
+                    beforeSend: function () {
+                        this.layerIndex = layer.load(1, {
+                            shade: [0.1, '#fff'] //0.1透明度的白色背景
+                        });
+                    },
+                    success: function (msg) {
+                        layer.closeAll('loading');
+                        if (msg.status === 'success') {
+                            layer.alert('新增成功！', {icon: 1}, function (index) {
+                                parent.layer.closeAll(); //关闭所有弹窗
+                            });
+                        } else if (msg.status === 'fail') {
+                            layer.msg(msg.form_errors, {icon: 5, shift : 6});
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+    <script>
+        // 动态背景图
+        $("#bubbles").bubbler(
+            {
+                color: "1E9FFF",
+                ammount: 10,
+                min: 0.1,
+                max: 1,
+                time: 10,
+                vertical: true,
+                horizontal: true,
+            }
+        );
+    </script>
+    <script type="module">
+        // 翻页
+        {#import Swiper from 'https://unpkg.com/swiper/swiper-bundle.esm.browser.min.js'#}
+
+        var mySwiper = new Swiper(".swiper", {
+            //direction: "vertical",
+            noSwiping: true,
+            noSwipingClass: 'stop-swiping',
+            pagination: {
+                el: ".swiper-pagination",
+                type: "progressbar",
+                renderProgressbar: function (progressbarFillClass) {
+                    return '<span class="' + progressbarFillClass + '"></span>';
+                }
+            },
+            keyboard: true,
+            mousewheel: true,
+            on: {
+                slideChangeTransitionStart: function () {
+                    if (mySwiper.isBeginning) {
+                        $("#prev_slide").hide();
+                        $("#next_slide").show();
+                        $("#submit_form").hide();
+                    } else if (mySwiper.isEnd) {
+                        $("#prev_slide").show();
+                        $("#next_slide").hide();
+                        $("#submit_form").show();
+
+                    } else {
+                        $("#prev_slide").show();
+                        $("#next_slide").show();
+                        $("#submit_form").hide();
+
+                    }
+                },
+            },
+        })
+        $('#prev_slide').click(function () {
+            mySwiper.slidePrev();
+        })
+        $('#next_slide').click(function () {
+            mySwiper.slideNext();
+        })
+    </script>
+    <script>
+        // 点击新增行
+        $("#intro .layui-table").on("click", "a:has(.layui-icon-add-circle)", function () {
+            var cur_tr = $(this).parents("tr");
+            $("<tr>" + cur_tr.html() + "</tr>").insertAfter(cur_tr);
+        })
+        // 点击删除行
+        $("#intro .layui-table").on("click", "a:has(.layui-icon-delete)", function () {
+            var cur_tr_length = $(this).parents("tbody").find("tr").length;
+            if (cur_tr_length > 1) {
+                $(this).parents("tr").remove();
+            } else {
+                layer.msg("至少保留一条信息")
+            }
+
+        })
+    </script>
+{% endblock %}

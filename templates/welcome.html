@@ -1,0 +1,363 @@
+{% extends 'iframe_base.html' %}
+{% load static %}
+{% block custom_css %}
+    <style>
+        {#小标签靠右#}
+        .layuiadmin-badge{
+            top: 50%;
+            margin-top: -9px;
+            position: absolute;
+            right: 15px;
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-sm12">
+                <div class="layui-card">
+                    <div class="layui-card-header">电脑统计
+                        <div class="layui-btn-group layuiadmin-btn-group">
+                            <a href="javascript:;" class="layui-btn layui-btn-xs">主机</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-primary layui-btn-xs">显示器</a>
+                        </div>
+                    </div>
+
+                    <div class="layui-card-body">
+                        <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
+                            <li class="layui-col-md3 layui-col-xs6">
+                                <a onclick="window.parent.xadmin.add_tab('主机管理', '')"
+                                   class="x-admin-backlog-body">
+                                    <h3>在用</h3>
+                                    <p>
+                                        <cite class="color-green">{{ computer_info.use }}</cite>
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="layui-col-md3 layui-col-xs6">
+                                <a onclick="window.parent.xadmin.add_tab('主机管理', '')" class="x-admin-backlog-body">
+                                    <h3>库存</h3>
+                                    <p>
+                                        <cite class="color-yellow">{{ computer_info.repertory }}</cite>
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="layui-col-md3 layui-col-xs6 ">
+                                <a onclick="window.parent.xadmin.add_tab('主机管理', '')" class="x-admin-backlog-body">
+                                    <h3>报修</h3>
+                                    <p>
+                                        <cite class="color-red">0</cite>
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="layui-col-md3 layui-col-xs6">
+                                <a onclick="window.parent.xadmin.add_tab('主机管理', '')" class="x-admin-backlog-body">
+                                    <h3>报废</h3>
+                                    <p>
+                                        <cite class="color-darkgray">0</cite></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="layui-card-body" style="display: none;">
+                        <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
+                            <li class="layui-col-md3 layui-col-xs6">
+                                <a onclick="window.parent.xadmin.add_tab('显示器管理', '')"
+                                   class="x-admin-backlog-body">
+                                    <h3>在用</h3>
+                                    <p>
+                                        <cite class="color-green">{{ monitor_info.use }}</cite>
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="layui-col-md3 layui-col-xs6">
+                                <a onclick="window.parent.xadmin.add_tab('显示器管理', '')" class="x-admin-backlog-body">
+                                    <h3>库存</h3>
+                                    <p>
+                                        <cite class="color-yellow">{{ monitor_info.repertory }}</cite>
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="layui-col-md3 layui-col-xs6 ">
+                                <a onclick="window.parent.xadmin.add_tab('显示器管理', '')" class="x-admin-backlog-body">
+                                    <h3>报修</h3>
+                                    <p>
+                                        <cite class="color-red">0</cite>
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="layui-col-md3 layui-col-xs6">
+                                <a onclick="window.parent.xadmin.add_tab('显示器管理', '')" class="x-admin-backlog-body">
+                                    <h3>报废</h3>
+                                    <p>
+                                        <cite class="color-darkgray">0</cite></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">模块未使用
+                        <span class="layui-badge layui-bg-cyan layuiadmin-badge">日</span></div>
+                    <div class="layui-card-body  ">
+                        <p class="layuiadmin-big-font">33,555
+                            <i class="layui-icon layui-icon-form"></i>
+                        </p>
+                        <p>增长率
+                            <span class="layuiadmin-span-color color-red">10%</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">模块未使用
+                        <span class="layui-badge layui-bg-blue layuiadmin-badge">月</span></div>
+                    <div class="layui-card-body ">
+                        <p class="layuiadmin-big-font">33,555
+                            <i class="layui-icon layui-icon-form"></i>
+                        </p>
+                        <p>增长率
+                            <span class="layuiadmin-span-color color-green">10%</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">模块未使用
+                        <span class="layui-badge layui-bg-cyan layuiadmin-badge">日</span></div>
+                    <div class="layui-card-body ">
+                        <p class="layuiadmin-big-font">33,555
+                            <i class="layui-icon layui-icon-dollar"></i>
+                        </p>
+                        <p>增长率
+                            <span class="layuiadmin-span-color color-red">10%</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">模块未使用
+                        <span class="layui-badge layui-bg-blue layuiadmin-badge">月</span></div>
+                    <div class="layui-card-body ">
+                        <p class="layuiadmin-big-font">33,555
+                            <i class="layui-icon layui-icon-dollar"></i>
+                        </p>
+                        <p>增长率
+                            <span class="layuiadmin-span-color color-red">10%</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm12">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        测试数据
+                        <div class="layui-btn-group layuiadmin-btn-group">
+                            <a href="javascript:;" class="layui-btn layui-btn-xs">今年</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-primary layui-btn-xs">去年</a>
+                        </div>
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="layui-row">
+                            <div class="layui-col-md8">
+                                <div id="main1" style="width: 100%;height:400px;"></div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div id="main2" style="width: 100%;height:400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm12">
+                <div class="layui-card">
+                    <div class="layui-card-header">系统信息</div>
+                    <div class="layui-card-body ">
+                        <table class="layui-table">
+                            <tbody>
+                            <tr>
+                                <th>内部版本</th>
+                                <td>1.1</td>
+                            </tr>
+                            <tr>
+                                <th>服务器地址</th>
+                                <td>192.168.18.212:8003</td>
+                            </tr>
+                            <tr>
+                                <th>操作系统</th>
+                                <td>Windows</td>
+                            </tr>
+                            <tr>
+                                <th>运行环境</th>
+                                <td>Django version 3.2.6</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {#            <style id="welcome_style"></style>#}
+            <div class="layui-col-sm12">
+                <blockquote class="layui-elem-quote layui-quote-nm">储备生管理系统，由HYq提供技术支持。HYq ERP v1.1</blockquote>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block custom_js %}
+    <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/extension/bmap.min.js"></script>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main1'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                {#text: '折线图堆叠',#}
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['侯焱骞', '张卓雯', 'test', 'a', 'b']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name: '侯焱骞',
+                    type: 'line',
+                    stack: '总量',
+                    data: [120, 132, 101, 134, 90, 230, 210],
+                    itemStyle: {color: "#FF5722"}
+                },
+                {
+                    name: '张卓雯',
+                    type: 'line',
+                    stack: '总量',
+                    data: [220, 182, 191, 234, 290, 330, 310],
+                    itemStyle: {color: "#FFB800"}
+                },
+                {
+                    name: 'test',
+                    type: 'line',
+                    stack: '总量',
+                    data: [150, 232, 201, 154, 190, 330, 410],
+                    itemStyle: {color: "#009688"}
+                },
+                {
+                    name: 'a',
+                    type: 'line',
+                    stack: '总量',
+                    data: [320, 332, 301, 334, 390, 330, 320],
+                    itemStyle: {color: "#2F4056"}
+                },
+                {
+                    name: 'b',
+                    type: 'line',
+                    stack: '总量',
+                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    itemStyle: {color: "#1E9FFF"}
+                }
+            ]
+        };
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main2'));
+
+        // 指定图表的配置项和数据
+        option = {
+            title: {
+                {#text: '销售占比',#}
+                {#left: 'center',#}
+                {#top: 20,#}
+            },
+
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+
+            visualMap: {
+                show: false,
+                min: 80,
+                max: 600,
+                inRange: {
+                    colorLightness: [0, 1]
+                }
+            },
+            series: [
+                {
+                    name: '销售占比',
+                    type: 'pie',
+                    radius: '60%',
+                    center: ['50%', '50%'],
+                    data: [
+                        {value: 300, name: '侯焱骞', itemStyle: {color: "#FF5722"}},
+                        {value: 310, name: '张卓雯', itemStyle: {color: "#FFB800"}},
+                        {value: 274, name: 'test', itemStyle: {color: "#009688"}},
+                        {value: 235, name: 'a', itemStyle: {color: "#2F4056"}},
+                        {value: 400, name: 'b', itemStyle: {color: "#1E9FFF"}}
+                    ].sort(function (a, b) {
+                        return a.value - b.value
+                    }),
+                    roseType: 'angle',
+                    label: {
+                        normal: {
+                            textStyle: {
+                                {#color: 'rgba(255, 255, 255, 0.0)'#}
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            lineStyle: {
+                                color: 'rgba(255, 255, 255, 0.3)'
+                            },
+                            smooth: 0.2,
+                            length: 10,
+                            length2: 20
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            {#color: '#009688',#}
+                        }
+                    }
+                }
+            ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+{% endblock %}

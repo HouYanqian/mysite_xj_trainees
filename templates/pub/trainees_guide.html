@@ -1,0 +1,572 @@
+{% extends 'iframe_base.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="/static/css/guide.css">
+    <link rel="stylesheet" href="/static/plugin/swiper/swiper-bundle.min.css">
+{% endblock %}
+{% block content %}
+    <div class="swiper-pagination" style="box-shadow: 0px 0px 1px 0px #333;"></div>
+    <div id="bubbles"></div>
+    <div id="intro">
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-sm12">
+                    <fieldset class="layui-elem-field layui-field-title" style="margin: 30px 0px;">
+                        <legend>首次登录·基本信息录入向导</legend>
+                    </fieldset>
+                    <form id="addForm" class="layui-form" action="" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input name="name" hidden value="{{ request.user.id }}">
+                        <div class="swiper">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <fieldset class="layui-elem-field">
+                                        <legend>第一步</legend>
+                                        <div class="layui-field-box">
+                                            <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">培养方向</label>
+                                                    <div class="layui-input-inline">
+                                                        <select name="orientation" lay-verify="required" lay-search="">
+                                                            <option>--</option>
+                                                            <option value=1>动画</option>
+                                                            <option value=2>模型</option>
+                                                            <option value=3>解算</option>
+                                                            <option value=4>灯光</option>
+                                                            <option value=5>制片</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">批次</label>
+                                                    <div class="layui-input-inline">
+                                                        <input placeholder="第n期" type="text" name="lot"
+                                                               lay-verify="required" class="layui-input"
+                                                               autocomplete="on" value="">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">入训日期</label>
+                                                    <div class="layui-input-inline">
+                                                        <input id="date" placeholder="年-月-日" type="text"
+                                                               name="entry_date"
+                                                               lay-verify="date" lay-reqtext="请输入日期"
+                                                               class="layui-input" value="{% now "Y-m-d" %}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="swiper-slide">
+                                    <fieldset class="layui-elem-field">
+                                        <legend>第二步</legend>
+                                        <div class="layui-field-box">
+                                            <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">姓名</label>
+                                                    <div class="layui-input-inline">
+                                                        <input placeholder="姓名" type="text" name="rename"
+                                                               lay-verify="required" class="layui-input"
+                                                               value="{{ request.user }}">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">性别</label>
+                                                    <div class="layui-input-inline">
+                                                        <input type="radio" name="gender" value="man" title="男"
+                                                               checked="">
+                                                        <input type="radio" name="gender" value="woman" title="女">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">民族</label>
+                                                    <div class="layui-input-inline">
+                                                        <input placeholder="汉" type="text" name="nation"
+                                                               lay-verify="required"
+                                                               class="layui-input"
+                                                               value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">籍贯</label>
+                                                    <div class="layui-input-inline">
+                                                        <input placeholder="籍贯" type="text" name="native"
+                                                               lay-verify="required"
+                                                               class="layui-input"
+                                                               value="">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">年龄</label>
+                                                    <div class="layui-input-inline">
+                                                        <input placeholder="00" type="number" name="age"
+                                                               lay-verify="required|number"
+                                                               lay-reqtext="请输入数字"
+                                                               class="layui-input">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">政治面貌</label>
+                                                    <div class="layui-input-inline">
+                                                        <input placeholder="政治面貌" type="text" name="politics_status"
+                                                               class="layui-input"
+                                                               value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">身高</label>
+                                                    <div class="layui-input-inline">
+                                                        <input placeholder="cm" type="number" name="height"
+                                                               lay-verify="required|number"
+                                                               lay-reqtext="请输入数字"
+                                                               class="layui-input">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">体重</label>
+                                                    <div class="layui-input-inline">
+                                                        <input placeholder="kg" type="number" name="weight"
+                                                               lay-verify="required|number"
+                                                               lay-reqtext="请输入数字"
+                                                               class="layui-input">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </fieldset>
+                                </div>
+                                <div class="swiper-slide">
+                                    <fieldset class="layui-elem-field">
+                                        <legend>第三步</legend>
+                                        <div class="layui-field-box">
+                                            <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">面部采集</label>
+                                                    <div class="layui-input-inline">
+
+                                                        <div class="layui-upload">
+                                                            <div class="layui-upload-img">
+                                                                <label class="layui-upload-ico">
+                                                                    <input type="file" class="sr-only"
+                                                                           id="upload"
+                                                                           name="image"
+                                                                           capture="camera"
+                                                                           accept="image/*">
+                                                                    <i class="layui-icon layui-icon-camera-fill"></i>
+                                                                </label>
+                                                                <img id="upload_img" {% if request.user.image %}src="{{ MEDIA_URL }}{{ request.user.image }}"{% endif %}>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="swiper-slide">
+                                    <fieldset class="layui-elem-field">
+                                        <legend>第四步</legend>
+                                        <div class="layui-field-box">
+                                            <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">毕业院校</label>
+                                                    <div class="layui-input-inline">
+                                                        <input placeholder="毕业院校" type="text" name="school"
+                                                               lay-verify="required"
+                                                               class="layui-input"
+                                                               value="">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">专业</label>
+                                                    <div class="layui-input-inline">
+                                                        <input placeholder="专业" type="text" name="major"
+                                                               lay-verify="required"
+                                                               class="layui-input"
+                                                               value="">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">最高学历</label>
+                                                    <div class="layui-input-inline">
+                                                        <select name="education" lay-verify="required" lay-search="">
+                                                            <option>--</option>
+                                                            <option value=1>研究生</option>
+                                                            <option value=2>本科</option>
+                                                            <option value=3>大专</option>
+                                                            <option value=4>高中</option>
+                                                            <option value=5>其他</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">联系电话</label>
+                                                    <div class="layui-input-inline">
+                                                        <input placeholder="联系电话" type="text" name="phone"
+                                                               lay-verify="phone"
+                                                               class="layui-input"
+                                                               value="">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">身份证号码</label>
+                                                    <div class="layui-input-inline">
+                                                        <input placeholder="身份证号码" type="text" name="id_card"
+                                                               lay-verify="identity"
+                                                               class="layui-input" autocomplete="off"
+                                                               value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">通讯地址</label>
+                                                <div class="layui-input-block">
+                                                    <input placeholder="通讯地址" type="text" name="address"
+                                                           lay-verify="required"
+                                                           class="layui-input"
+                                                           value="">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </fieldset>
+                                </div>
+                                <div class="swiper-slide">
+                                    <fieldset class="layui-elem-field">
+                                        <legend>第五步</legend>
+                                        <div class="layui-field-box">
+
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">主要教学经历</label>
+                                                <div class="layui-input-block">
+                                                    <input name="education_experience" hidden value="">
+                                                    <table class="layui-table swiper-no-swiping">
+                                                        <colgroup>
+                                                            <col>
+                                                            <col width="200">
+                                                            <col width="150">
+                                                            <col>
+                                                        </colgroup>
+
+                                                        <tbody>
+                                                        <tr>
+                                                            <td><input placeholder="院校(高中、含培训机构)"
+                                                                       class="layui-input layui-table-edit"
+                                                                       lay-verify="required"></td>
+                                                            <td><input placeholder="专业"
+                                                                       class="layui-input layui-table-edit"
+                                                                       lay-verify="required"></td>
+                                                            <td><input placeholder="毕业时间"
+                                                                       class="layui-input layui-table-edit"
+                                                                       lay-verify="required"></td>
+                                                            <td>
+                                                                <div class="layui-btn-group">
+                                                                    <a class="layui-btn layui-btn-normal layui-btn-xs">
+                                                                        <i class="layui-icon layui-icon-add-circle"></i>
+                                                                    </a>
+                                                                    <a class="layui-btn layui-btn-normal layui-btn-xs">
+                                                                        <i class="layui-icon layui-icon-delete"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">主要家庭成员</label>
+                                                <div class="layui-input-block">
+                                                    <input name="family_member" hidden value="">
+                                                    <table class="layui-table swiper-no-swiping">
+                                                        <colgroup>
+                                                            <col width="200">
+                                                            <col width="50">
+                                                            <col width="150">
+                                                            <col>
+                                                            <col width="200">
+                                                            <col width="150">
+                                                            <col>
+                                                        </colgroup>
+
+                                                        <tbody>
+                                                        <tr>
+                                                            <td><input placeholder="姓名"
+                                                                       class="layui-input layui-table-edit"
+                                                                       lay-verify="required"></td>
+                                                            <td><input placeholder="关系"
+                                                                       class="layui-input layui-table-edit"
+                                                                       lay-verify="required"></td>
+                                                            <td><input placeholder="出生日期"
+                                                                       class="layui-input layui-table-edit"></td>
+                                                            <td><input placeholder="工作单位"
+                                                                       class="layui-input layui-table-edit"></td>
+                                                            <td><input placeholder="职位"
+                                                                       class="layui-input layui-table-edit"></td>
+                                                            <td><input placeholder="电话"
+                                                                       class="layui-input layui-table-edit"
+                                                                       lay-verify="phone"></td>
+                                                            <td>
+                                                                <div class="layui-btn-group">
+                                                                    <a class="layui-btn layui-btn-normal layui-btn-xs">
+                                                                        <i class="layui-icon layui-icon-add-circle"></i>
+                                                                    </a>
+                                                                    <a class="layui-btn layui-btn-normal layui-btn-xs">
+                                                                        <i class="layui-icon layui-icon-delete"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">紧急联系人</label>
+                                                <div class="layui-input-block">
+                                                    <input name="emergency_contact" hidden value="">
+                                                    <table class="layui-table swiper-no-swiping">
+                                                        <colgroup>
+                                                            <col>
+                                                            <col width="200">
+                                                            <col width="150">
+                                                            <col>
+                                                        </colgroup>
+
+                                                        <tbody>
+                                                        <tr>
+                                                            <td><input placeholder="姓名"
+                                                                       class="layui-input layui-table-edit"
+                                                                       lay-verify="required"></td>
+                                                            <td><input placeholder="关系"
+                                                                       class="layui-input layui-table-edit"
+                                                                       lay-verify="required"></td>
+                                                            <td><input placeholder="联系电话"
+                                                                       class="layui-input layui-table-edit"
+                                                                       lay-verify="phone"></td>
+                                                            <td>
+
+                                                                <div class="layui-btn-group">
+                                                                    <a class="layui-btn layui-btn-normal layui-btn-xs">
+                                                                        <i class="layui-icon layui-icon-add-circle"></i>
+                                                                    </a>
+                                                                    <a class="layui-btn layui-btn-normal layui-btn-xs">
+                                                                        <i class="layui-icon layui-icon-delete"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item layui-form-text">
+                                                <label class="layui-form-label">备注</label>
+                                                <div class="layui-input-block">
+                                                    <textarea placeholder="请输入内容" name="remark"
+                                                              class="layui-textarea"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn layui-btn-normal layui-btn-radius"
+                                        style="display: none"></button>
+                                <button type="button" id="next_slide"
+                                        class="layui-btn layui-btn-normal layui-btn-radius">
+                                    下一步
+                                </button>
+                                <button type="submit" id="submit_form" style="display: none"
+                                        class="layui-btn layui-btn-normal layui-btn-radius"
+                                        lay-submit="">提交
+                                </button>
+                                <button type="button" id="prev_slide" style="display: none"
+                                        class="layui-btn layui-btn-normal layui-btn-radius">
+                                    上一步
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary layui-btn-radius">重置
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block custom_js %}
+    <script src="{% static 'plugin/bubbler/bubbler.js' %}"></script>
+    <script src="{% static 'plugin/swiper/swiper-bundle.min.js' %}"></script>
+    <script>
+        layui.use(["form", "laydate", "upload"], function () {
+            var $ = layui.$,
+                form = layui.form,
+                laydate = layui.laydate,
+                upload = layui.upload;
+
+            // 日期
+            laydate.render({
+                elem: '#date'
+            });
+
+
+            // 文件上传
+            var uploadInst = upload.render({
+                elem: '#upload'
+                , url: '{% url 'upload_img' %}' //此处用的是第三方的 http 请求演示，实际使用时改成您自己的上传接口即可。
+                , data: {user_id: {{ request.user.id }}, csrfmiddlewaretoken: '{{ csrf_token }}'}
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#upload_img').attr('src', result); //图片链接（base64）
+                    });
+                    layer.msg('上传中', {icon: 16, time: 0});
+                }, done: function (res, index, upload) {
+                    layer.closeAll(); //关闭loading
+                    if (msg.status === 'success') {
+                        layer.msg('修改成功！', {icon: 1});
+                    } else if (msg.status === 'error') {
+                        layer.msg('输入类型错误！', {icon: 5});
+                    } else if (msg.status === 'hint') {
+                        layer.msg('注意！', {icon: 0});
+                    } else {
+                        layer.msg('没有编辑权限', {icon: 4});
+                    }
+                }
+                , error: function (index, upload) {
+                    console.log(res, index, upload)
+                    layer.closeAll(); //关闭loading
+                }
+
+            });
+
+            //监听提交
+            form.on('submit()', function () {
+                var data = $("#addForm").serialize();
+                $.ajax({
+                    type: "post",
+                    url: "{% url 'pub-trainees_guide' %}",
+                    data: data,
+                    cache: false,
+                    beforeSend: function () {
+                        this.layerIndex = layer.load(1, {
+                            shade: [0.1, '#fff'] //0.1透明度的白色背景
+                        });
+                    },
+                    success: function (msg) {
+                        layer.closeAll('loading');
+                        if (msg.status === 'success') {
+                            layer.alert('新增成功！', {icon: 1}, function (index) {
+                                parent.layer.closeAll(); //关闭所有弹窗
+                            });
+                            window.location.href='/'
+                        } else if (msg.status === 'fail') {
+                            layer.msg(msg.form_errors, {icon: 5, shift: 6});
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+    <script>
+        // 动态背景图
+        $("#bubbles").bubbler(
+            {
+                color: "1E9FFF",
+                ammount: 10,
+                min: 0.1,
+                max: 1,
+                time: 10,
+                vertical: true,
+                horizontal: true,
+            }
+        );
+    </script>
+    <script type="module">
+        // 翻页
+        {#import Swiper from 'https://unpkg.com/swiper/swiper-bundle.esm.browser.min.js'#}
+
+        var mySwiper = new Swiper(".swiper", {
+            //direction: "vertical",
+            noSwiping: true,
+            noSwipingClass: 'stop-swiping',
+            pagination: {
+                el: ".swiper-pagination",
+                type: "progressbar",
+                renderProgressbar: function (progressbarFillClass) {
+                    return '<span class="' + progressbarFillClass + '"></span>';
+                }
+            },
+            keyboard: true,
+            mousewheel: true,
+            on: {
+                slideChangeTransitionStart: function () {
+                    if (mySwiper.isBeginning) {
+                        $("#prev_slide").hide();
+                        $("#next_slide").show();
+                        $("#submit_form").hide();
+                    } else if (mySwiper.isEnd) {
+                        $("#prev_slide").show();
+                        $("#next_slide").hide();
+                        $("#submit_form").show();
+
+                    } else {
+                        $("#prev_slide").show();
+                        $("#next_slide").show();
+                        $("#submit_form").hide();
+
+                    }
+                },
+            },
+        })
+        $('#prev_slide').click(function () {
+            mySwiper.slidePrev();
+        })
+        $('#next_slide').click(function () {
+            mySwiper.slideNext();
+        })
+    </script>
+    <script>
+        // 点击新增行
+        $("#intro .layui-table").on("click", "a:has(.layui-icon-add-circle)", function () {
+            var cur_tr = $(this).parents("tr");
+            $("<tr>" + cur_tr.html() + "</tr>").insertAfter(cur_tr);
+        })
+        // 点击删除行
+        $("#intro .layui-table").on("click", "a:has(.layui-icon-delete)", function () {
+            var cur_tr_length = $(this).parents("tbody").find("tr").length;
+            if (cur_tr_length > 1) {
+                $(this).parents("tr").remove();
+            } else {
+                layer.msg("至少保留一条信息")
+            }
+        })
+        // 编辑行表格行时
+        $("#intro .layui-table").on("change", "input.layui-table-edit", function () {
+            var values_text = "",
+                cur_table = $(this).parents("table");
+            cur_table.find("input.layui-table-edit").each(function () {
+                values_text += $(this).val() + ", "
+            })
+            cur_table.prev().val(values_text)
+        })
+    </script>
+{% endblock %}

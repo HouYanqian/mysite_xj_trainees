@@ -1,0 +1,429 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>人员排班</title>
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}" media="all">
+    <style>
+        body {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<blockquote id="header" class="layui-elem-quote layui-text">
+    <div class="layui-inline">
+        <h3>人员排班</h3>
+    </div>
+    <div class="layui-inline" style="float: right;">
+        <div class="layui-btn-group">
+            <a href="javascript:location.reload();" class="layui-btn layui-btn-sm"><i
+                    class="layui-icon layui-icon-refresh"></i></a>
+        </div>
+    </div>
+</blockquote>
+
+<fieldset id="field_title" class="layui-elem-field layui-field-title" hidden>
+    <legend><i class="layui-icon layui-icon-table"></i></legend>
+</fieldset>
+
+<div id="search" class="layui-form" hidden>
+    <div class="layui-row">
+        <div class="searchTable">
+            <div class="layui-inline">
+                <input class="layui-input" placeholder="id 搜索" name="id" id="idReload" autocomplete="true"
+                       value="{{ id }}">
+            </div>
+            <div class="layui-inline">
+                <input class="layui-input" placeholder="姓名查询" name="name" id="nameReload" autocomplete="true"
+                       value="{{ name }}">
+            </div>
+            <button class="layui-btn" data-type="reload">搜索</button>
+        </div>
+    </div>
+</div>
+
+<div class="layui-form">
+
+    <div class="layui-inline">
+        <input type="text" placeholder="年-月-日 - 年-月-日" class="layui-input" name="dateReload" id="dateReload"
+               autocomplete="off" value="{{ date }}">
+    </div>
+    <div class="layui-inline">
+        <div class="layui-btn-group">
+            <a class="layui-btn  layui-btn-primary layui-btn-sm" style="border-style: hidden" onclick="selectMonth(-1)"><i class="layui-icon">&#xe603;</i></a>
+            <a class="layui-btn layui-btn-primary layui-btn-sm" style="border-style: hidden" onclick="selectMonth(0)"><i class="layui-icon">&#xe637;</i></a>
+            <a class="layui-btn layui-btn-primary layui-btn-sm" style="border-style: hidden" onclick="selectMonth(1)"><i class="layui-icon">&#xe602;</i></a>
+        </div>
+    </div>
+</div>
+
+
+<table class="layui-hide" id="demo" lay-filter="test"></table>
+
+<script src="{% static 'jquery-3.4.1.js' %}" charset="utf-8"></script>
+<script src="{% static 'layui/layui.js' %}" charset="utf-8"></script>
+
+<script type="text/html" id="barDemo">
+    <a title="历史" class="layui-btn layui-btn-primary layui-btn-xs" lay-event="history"><i
+            class="layui-icon">&#xe674;</i></a>
+    <a title="更新" class="layui-btn layui-btn-xs" lay-event="update"><i class="layui-icon">&#xe642;</i></a>
+    <a title="删除" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i></a>
+</script>
+
+<script>
+    layui.use(['laydate', 'layer', 'table'], function () {
+        var laydate = layui.laydate, //日期
+            layer = layui.layer, //弹层
+            table = layui.table; //表格
+
+        //执行一个 table 实例
+        table.render({
+            elem: '#demo'
+            , url: 'record'
+            , title: ''
+            //, cellMinWidth: 105 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , toolbar: 'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+            , defaultToolbar: [{ //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                title: '搜索'
+                , layEvent: 'LAYTABLE_TIPS'
+                , icon: 'layui-icon-search'
+            }, 'filter', 'exports', 'print']
+            , totalRow: true //开启合计行
+            , cols: [[ //表头
+                {field: 'id', width: '60', title: 'ID', sort: true, style: 'color: #009688', fixed: 'left', rowspan: 2},
+                {field: 'name', width: '80', title: '姓名', sort: true, style: 'color: #009688', fixed: 'left', rowspan: 2},
+                {field: 'start_date', width: '134', title: '入学时间', sort: true, fixed: 'left', rowspan: 2},
+                    {% for d in period %}{field: '{{ d|date:'m/d' }}', width: '66', title: '{{ d|date:'m/d' }}'},{% endfor %}
+                {field: 'end_date', width: '134', title: '结业时间', sort: true, fixed: 'right', rowspan: 2},
+                {fixed: 'right', width: '150', title: '操作', align: 'center', toolbar: '#barDemo', rowspan: 2},
+            ],[
+                    {% for d in period %}{field: '', title: '{{ d|date:'l'|slice:"2:3" }}', colGroup:true},{% endfor %}
+            ]]
+            , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                , groups: 1
+                , limits: [10, 20, 50, 100]
+            }
+            {#, initSort: {#}
+            {#    field: 'id'#}
+            {#    , type: 'desc'#}
+            {# }#}
+            , done: function (res, curr, count) {
+                $
+                $('td .layui-table-cell').each(function (index, item) {
+                    if ($(this).text().indexOf("_past") >= 0) {
+                        $(this).text($(this).text().substr(0, $(this).text().length-5))
+                        $(this).css("background-color", "#c2c2c2")
+                        $(this).css("color", "#fff")
+                    } else if ($(this).text().indexOf("_today") >= 0) {
+                        $(this).text($(this).text().substr(0, $(this).text().length-6))
+                        $(this).css("font-weight", "bold")
+                    } else if ($(this).text().indexOf("1-") >= 0) {
+                        $(this).css("background-color", "#FF5722")
+                        $(this).css("color", "#fff")
+                    } else if ($(this).text().indexOf("2-") >= 0) {
+                        $(this).css("background-color", "#FFB800")
+                        $(this).css("color", "#fff")
+                    } else if ($(this).text().indexOf("3-") >= 0) {
+                        $(this).css("background-color", "#009688")
+                        $(this).css("color", "#fff")
+                    } else if ($(this).text().indexOf("4-") >= 0) {
+                        $(this).css("background-color", "#2F4056")
+                        $(this).css("color", "#fff")
+                    } else if ($(this).text().indexOf("5-") >= 0) {
+                        $(this).css("background-color", "#1E9FFF")
+                        $(this).css("color", "#fff")
+                    } else if ($(this).text().indexOf("6-") >= 0) {
+                        $(this).css("background-color", "#393D49")
+                        $(this).css("color", "#fff")
+                    }
+                });
+            }
+
+        });
+
+        //监听单元格编辑
+        table.on('edit(test)', function (obj) {
+            var value = obj.value //得到修改后的值
+                , data = obj.data //得到所在行所有键值
+                , field = obj.field; //得到字段
+            doEdit(data.id, field, value)
+        });
+
+        //监听行事件 //rowDouble双击
+        table.on('rowDouble(test)', function (obj) {
+            var currentCell = window.event.srcElement;
+            var id = obj.data.id;
+            var field;
+            if (currentCell.tagName === "DIV") {
+                field = currentCell.parentElement.getAttribute("data-field");
+            } else if (currentCell.tagName === "TD") {
+                field = currentCell.getAttribute("data-field");
+            } else if (currentCell.tagName === "SPAN") {
+                field = currentCell.parentElement.parentElement.getAttribute("data-field");
+            }
+            if (field === 'id' || field === 'name') {
+                doHistory(id)
+            } else {
+                doChange(id, field)
+            }
+        });
+
+        //监听头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id)
+                , data = checkStatus.data; //获取选中的数据
+            switch (obj.event) {
+                case 'add':
+
+                {#var add_label = layer.open({#}
+                    layer.open({
+                        type: 2,
+                        title: '新增',
+                        shade: 0,
+                        {#shadeClose: false,#}
+                        maxmin: true,
+                        area: ['400px', '580px'],
+                        content: "{% url 'other-reckon_date-add' %}",
+                        end: function () {
+                            //关闭时做的事情
+                            table.reload('demo')
+                        }
+                    });
+                {#layer.full(add_label);#}
+                    break;
+                case 'update':
+                    if (data.length === 0) {
+                        layer.msg('请选择一行');
+                    } else if (data.length > 1) {
+                        layer.msg('只能同时更新一个');
+                    } else {
+                        doUpdate(data[0].id)
+                    }
+                    break;
+                case 'delete':
+                    if (data.length === 0) {
+                        layer.msg('请选择删除行');
+                    } else {
+                        var delList = [];
+                        data.forEach(function (n) {
+                            delList.push(n.id)
+                        });
+                        //layer.alert(JSON.stringify(delList));
+                        doDel(JSON.stringify(delList))
+                    }
+                    break;
+                //自定义头工具栏右侧图标 - 提示
+                case 'LAYTABLE_TIPS':
+                    $("#search").toggle();
+                    $("#header").toggle();
+                    $("#field_title").toggle();
+                    $("#dateReload").toggle();
+                    break;
+            }
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                , layEvent = obj.event; //获得 lay-event 对应的值
+            if (layEvent === 'history') {
+                doHistory(obj.data.id);
+            } else if (layEvent === 'update') {
+                doUpdate(obj.data.id)
+            } else if (layEvent === 'del') {
+                doDel(obj.data.id);
+            }
+        });
+
+        //将日期直接嵌套在指定容器中
+        laydate.render({
+            elem: '#dateReload'
+            , range: true
+            //,calendar: true //是否开启公历重要节日
+            , mark: {} //标记重要日子
+            , done: function (value) {
+                window.location.href = '?date=' + value;
+            }
+        });
+
+
+        //编辑
+        function doEdit(id, field, value) {
+            $.ajax({
+                type: 'post',
+                url: "{% url 'other-reckon_date-add' %}",
+                data: {
+                    "id": id,
+                    "field": field,
+                    "value": value,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                cache: false,
+                beforeSend: function () {
+                    this.layerIndex = layer.load(1, {
+                        shade: [0.1, '#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success: function (msg) {
+                    layer.closeAll('loading');
+                    if (msg.status === 'success') {
+                        layer.msg('修改成功！', {icon: 1});
+                    } else if (msg.status === 'error') {
+                        layer.msg('输入类型错误！', {icon: 5});
+                    } else if (msg.status === 'hint') {
+                        layer.msg('注意！', {icon: 0});
+                    } else {
+                        layer.msg('没有编辑权限', {icon: 4});
+                    }
+                    {#table.reload('demo')#}
+                }
+            });
+        }
+
+        //历史
+        function doHistory(id) {
+            layer.open({
+                type: 2,
+                title: '更新',
+                shade: 0,
+                {#shadeClose: false,#}
+                maxmin: true,
+                area: ['400px', '80%'],
+                content: "{% url 'other-reckon_date-history' %}?id=" + id,
+                end: function () {
+                }
+            });
+        }//更新
+        function doUpdate(id) {
+            layer.open({
+                type: 2,
+                title: '更新',
+                shade: 0,
+                {#shadeClose: false,#}
+                maxmin: true,
+                area: ['400px', '580px'],
+                content: "{% url 'other-reckon_date-update' %}?id=" + id,
+                end: function () {
+                    //关闭时做的事情
+                    table.reload('demo')
+                }
+            });
+        }
+
+        //删除
+        function doDel(ids) {
+            layer.alert('确定删除吗？', {
+                title: '提示'
+                , icon: 3 //0:感叹号 1：对号 2：差号 3：问号 4：小锁 5：哭脸 6：笑脸
+                , time: 0 //不自动关闭
+                , btn: ['是', '否']
+                , yes: function (index) {
+                    layer.close(index);
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'other-reckon_date-del' %}",
+                        data: {"id": ids, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                        cache: false,
+                        success: function (msg) {
+                            if (msg.result) {
+                                layer.msg("删除成功", {icon: 1});
+                                table.reload('demo')
+                            } else {
+                                layer.msg("删除失败", {icon: 2});
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        //选择
+        function doChange(id, date) {
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'other-reckon_date-change' %}",
+                data: {"id": id, "date": date, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                cache: false,
+                success: function (msg) {
+                    if (msg.status == "success") {
+                        table.reload('demo')
+                        layer.msg(date+'更改成功')
+                    } else {
+                        layer.msg("操作失败，无权限", {icon: 2});
+                    }
+                }
+            });
+        }
+
+        //搜索框
+        var $ = layui.$, active = {
+            reload: function () {
+                var idReload = $('#idReload');
+                var nameReload = $('#nameReload');
+
+                //执行重载
+                table.reload('demo', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , where: {
+                        key: {
+                            ids: idReload.val(),
+                            name: nameReload.val(),
+                        }
+                    }
+                }, 'data');
+            }
+        };
+        $('.searchTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        {% if id or name %}
+            $("button[data-type=reload]").click();
+        {% endif %}
+
+    });
+
+    function selectMonth(month) {
+        var new_date,
+            new_year,
+            new_month,
+            date=$("#dateReload").val();
+        if (month < 0) {
+            new_year = parseInt(date.substr(0, 4))
+            new_month = parseInt(date.substr(5, 2)) - 1
+            if(!new_month){
+                new_month = 12
+                new_year -= 1
+            }
+            new_date = new_year + "-" + new_month + "-01 - " + date.substr(0, 8) + "01"
+        }else if (month == 0) {
+            new_year = {% now "Y" %}
+            new_month = {% now "m" %} + 1
+            if(!new_month > 12){
+                new_month = 1
+                new_year += 1
+            }
+            new_date = "{% now 'Y-m' %}" + "-01 - " + new_year + "-" + new_month + "-01"
+        }else if (month > 0) {
+            new_year = parseInt(date.substr(13, 4))
+            new_month = parseInt(date.substr(18, 2)) + 1
+            if(new_month > 12){
+                new_month = 1
+                new_year += 1
+            }
+            new_date = date.substr(13, 7)+ "-01 - " + new_year + "-" + new_month + "-01"
+        }
+        window.location.href = '?date=' + new_date;
+    }
+</script>
+</body>
+</html>

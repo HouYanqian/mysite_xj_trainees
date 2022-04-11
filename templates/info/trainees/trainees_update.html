@@ -1,0 +1,318 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>更新</title>
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}" media="all">
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .demo-carousel {
+            height: 200px;
+            line-height: 200px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<blockquote class="layui-elem-quote layui-text">
+    <h3>更新</h3>
+</blockquote>
+
+<form id="addForm" class="layui-form" action="">
+    {% csrf_token %}
+    <input type="hidden" name='id' value="{{ trainees_info_record.id }}"/>
+    <input type="hidden" name='name' value="{{ trainees_info_record.name_id }}"/>
+    {#    <fieldset class="layui-elem-field">#}
+    {#          // 框#}
+    {#        <legend style="font-size: 8px; color: #e6e6e6;"></legend>#}
+    {#        <div class="layui-field-box">#}
+    {#        </div>#}
+    {#    </fieldset>#}
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">培养方向</label>
+            <div class="layui-input-inline">
+                <select name="orientation" lay-verify="required" lay-reqtext="培养方向 为必填项">
+                    <option value=""></option>
+                    <option value="1"{% ifequal trainees_info_record.orientation '1' %}
+                            selected=""{% endifequal %}>动画
+                    </option>
+                    <option value="2"{% ifequal trainees_info_record.orientation '2' %}
+                            selected=""{% endifequal %}>模型
+                    </option>
+                    <option value="3"{% ifequal trainees_info_record.orientation '3' %}
+                            selected=""{% endifequal %}>解算
+                    </option>
+                    <option value="4"{% ifequal trainees_info_record.orientation '4' %}
+                            selected=""{% endifequal %}>灯光
+                    </option>
+                    <option value="5"{% ifequal trainees_info_record.orientation '5' %}
+                            selected=""{% endifequal %}>制片
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">批次</label>
+            <div class="layui-input-inline">
+                <input type="text" name="lot" lay-verify="required" lay-reqtext="批次 为必填项" placeholder="批次"
+                       class="layui-input"
+                       value="{{ trainees_info_record.lot }}">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">入训日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="entry_date" lay-verify="required" lay-reqtext="入训日期 为必填项" id="date"
+                       placeholder="0000-00-00" autocomplete="off"
+                       class="layui-input" value="{{ trainees_info_record.entry_date|date:'Y-m-d' }}">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="rename" lay-verify="required" lay-reqtext="姓名 为必填项" placeholder="姓名"
+                       class="layui-input"
+                       value="{{ trainees_info_record.name }}">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="gender" value="man" title="男"{% ifequal trainees_info_record.gender 'man' %}
+                       checked=""{% endifequal %}>
+                <input type="radio" name="gender" value="woman" title="女"{% ifequal trainees_info_record.gender 'woman' %}
+                       checked=""{% endifequal %}>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">民族</label>
+            <div class="layui-input-inline">
+                <input type="text" name="nation" lay-verify="required" lay-reqtext="民族 为必填项" placeholder="民族"
+                       class="layui-input"
+                       value="{{ trainees_info_record.nation }}">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">籍贯</label>
+            <div class="layui-input-inline">
+                <input type="text" name="native" lay-verify="required" lay-reqtext="民族 为必填项" placeholder="籍贯"
+                       class="layui-input"
+                       value="{{ trainees_info_record.native }}">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">年龄</label>
+            <div class="layui-input-inline">
+                <input type="number" name="age" lay-verify="required" lay-reqtext="民族 为必填项" placeholder="年龄"
+                       class="layui-input"
+                       value="{{ trainees_info_record.age }}">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">政治面貌</label>
+            <div class="layui-input-inline">
+                <input type="text" name="politics_status" placeholder="政治面貌" class="layui-input"
+                       value="{{ trainees_info_record.politics_status }}">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">身高</label>
+            <div class="layui-input-inline">
+                <input type="number" name="height" placeholder="身高" class="layui-input"
+                       value="{{ trainees_info_record.height }}">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">体重</label>
+            <div class="layui-input-inline">
+                <input type="number" name="weight" placeholder="体重" class="layui-input"
+                       value="{{ trainees_info_record.weight }}">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">毕业院校</label>
+            <div class="layui-input-inline">
+                <input type="text" name="school" placeholder="毕业院校" class="layui-input"
+                       value="{{ trainees_info_record.school }}">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">专业</label>
+            <div class="layui-input-inline">
+                <input type="text" name="major" placeholder="专业" class="layui-input"
+                       value="{{ trainees_info_record.major }}">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">最高学历</label>
+            <div class="layui-input-inline">
+                <select name="education">
+                    <option>--</option>
+                    <option value="1"{% ifequal trainees_info_record.education '1' %}
+                            selected=""{% endifequal %}>研究生
+                    </option>
+                    <option value="2"{% ifequal trainees_info_record.education '2' %}
+                            selected=""{% endifequal %}>本科
+                    </option>
+                    <option value="3"{% ifequal trainees_info_record.education '3' %}
+                            selected=""{% endifequal %}>大专
+                    </option>
+                    <option value="4"{% ifequal trainees_info_record.education '4' %}
+                            selected=""{% endifequal %}>高中
+                    </option>
+                    <option value="5"{% ifequal trainees_info_record.education '5' %}
+                            selected=""{% endifequal %}>其他
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">联系电话</label>
+            <div class="layui-input-inline">
+                <input type="text" name="phone" placeholder="联系电话" lay-verify="phone" class="layui-input"
+                       value="{{ trainees_info_record.phone }}">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">身份证号码</label>
+            <div class="layui-input-inline">
+                <input type="text" name="id_card" placeholder="身份证号码" lay-verify="identity" autocomplete="off"
+                       class="layui-input"
+                       value="{{ trainees_info_record.id_card }}">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">通讯地址</label>
+        <div class="layui-input-block">
+            <input type="text" name="address" placeholder="通讯地址" class="layui-input"
+                   value="{{ trainees_info_record.address }}">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">主要教学经历</label>
+        <div class="layui-input-block">
+            <textarea name="family_member" placeholder="主要教学经历"
+                      class="layui-textarea">{{ trainees_info_record.family_member }}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">主要家庭成员</label>
+        <div class="layui-input-block">
+            <textarea name="emergency_contact" placeholder="主要家庭成员"
+                      class="layui-textarea">{{ trainees_info_record.emergency_contact }}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">紧急联系人</label>
+        <div class="layui-input-block">
+            <textarea name="education_experience" placeholder="紧急联系人"
+                      class="layui-textarea">{{ trainees_info_record.education_experience }}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <textarea name="remark" placeholder="请输入内容"
+                      class="layui-textarea">{{ trainees_info_record.remark|default_if_none:'' }}</textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<blockquote class="layui-elem-quote layui-quote-nm" id="footer">:</blockquote>
+
+<script src="{% static 'layui/layui.js' %}" charset="utf-8"></script>
+<script src="{% static 'jquery-3.4.1.js' %}" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', "slider"], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            laydate = layui.laydate,
+            slider = layui.slider;
+
+        //日期
+        laydate.render({
+            elem: '#date'
+            , done: function (value) {
+            }
+        });
+
+        //监听提交
+        form.on('submit(demo1)', function () {
+            {#layer.alert(JSON.stringify(data.field), {#}
+            {#  title: '最终的提交信息'#}
+            {# });#}
+            var data = $("#addForm").serialize();
+            $.ajax({
+                type: "post",
+                url: "{% url '[trainees]:info-info-update' %}",
+                data: data,
+                cache: false,
+                beforeSend: function () {
+                    this.layerIndex = layer.load(1, {
+                        shade: [0.1, '#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success: function (msg) {
+                    layer.closeAll('loading');
+                    if (msg.status === 'success') {
+                        layer.alert('更新成功！', {icon: 1}, function (index) {
+                            parent.layer.closeAll(); //关闭所有弹窗
+                        });
+                    } else if (msg.status === 'fail') {
+                        layer.msg(msg.form_errors, {icon: 5, shift: 6});
+                    }
+                }
+            });
+            return false;
+        });
+        form.verify({
+            ip: function (value) {
+                if (value && !/^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$/.test(value)) {
+                    return 'ip地址格式错误';
+                }
+            },
+            mac: function (value) {
+                if (value && !/^[A-F0-9]{2}([-:]?[A-F0-9]{2})([-:.]?[A-F0-9]{2})([-:]?[A-F0-9]{2})([-:.]?[A-F0-9]{2})([-:]?[A-F0-9]{2})$/.test(value)) {
+                    return 'mac地址格式错误';
+                }
+            }
+        });
+    });
+</script>
+<script>
+    // 表单数据状态栏显示
+    $("form input").hover(function () {
+        if ($(this).val()) {
+            $("#footer").text($(this).attr("placeholder") + ": " + $(this).val()).removeClass("layui-quote-nm")
+        } else {
+            $("#footer").text("空")
+        }
+    }, function () {
+        $("#footer").text(":").addClass("layui-quote-nm")
+    })
+
+</script>
+</body>
+</html>

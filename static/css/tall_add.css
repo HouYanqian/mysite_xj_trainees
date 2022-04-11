@@ -1,0 +1,61 @@
+body {
+    margin: 10px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+.cmdlist-container-active {
+    background: #5FB878;
+}
+#concise_view a.active{
+    box-shadow: 0 0 5px #5FB878;
+}
+
+@media (max-width: 641px) {
+    .primary-mobile {
+        display: none;
+    }
+}
+@media (min-width: 640px) {
+}
+
+/* 栅格示例 */
+.grid-demo {
+    padding: 5px;
+    line-height: 20px;
+    text-align: center;
+    background-color: #79C48C;
+    color: #fff;
+}
+.grid-demo:hover {
+    background-color: #49A761;
+}
+
+.grid-demo-bg1 {
+    padding: 5px;
+    line-height: 20px;
+    background-color: #dddddd;
+    color: #000;
+    text-align: center;
+}
+.grid-demo-bg2 {
+    padding: 5px;
+    line-height: 20px;
+    background-color: #eeeeee;
+    color: #000;
+    text-align: center;
+}
+.grid-demo-bg1:hover{
+    background-color: #c2c2c2;
+}
+.grid-demo-bg2:hover{
+    background-color: #c2c2c2;
+}

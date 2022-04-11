@@ -1,0 +1,520 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>基本信息</title>
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}" media="all">
+    <style>
+        body {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<blockquote id="header" class="layui-elem-quote layui-text">
+    <div class="layui-inline">
+        <h3>基本信息</h3>
+    </div>
+    <div class="layui-inline" style="float: right;">
+        <div class="layui-btn-group">
+            <a href="javascript:location.reload();" class="layui-btn layui-btn-sm"><i
+                    class="layui-icon layui-icon-refresh"></i></a>
+        </div>
+    </div>
+</blockquote>
+
+
+<div id="search" class="layui-form" hidden>
+    <div class="layui-row">
+        <div class="searchTable">
+            <div class="layui-inline">
+                <input class="layui-input" placeholder="id 搜索" name="ids" autocomplete="true"
+                       value="{{ id }}">
+            </div>
+            <div class="layui-inline">
+                <input class="layui-input" placeholder="姓名" name="name" autocomplete="true"
+                       value="{{ name }}">
+            </div>
+            <button class="layui-btn" data-type="reload">搜索</button>
+        </div>
+    </div>
+</div>
+
+<table class="layui-hide" id="demo" lay-filter="test"></table>
+
+<blockquote class="layui-elem-quote layui-quote-nm layui-hide" id="footer">HYQ {{ layui.v }} v 0.1 储备生管理系统</blockquote>
+
+<script src="{% static 'jquery-3.4.1.js' %}" charset="utf-8"></script>
+<script src="{% static 'layui/layui.js' %}" charset="utf-8"></script>
+
+{% verbatim %}
+<script type="text/html" id="orientationTemp">
+    <a title="{{ d.orientation }}" class="layui-btn layui-btn-normal layui-btn-xs" lay-event="orientation">
+        {{ d.orientation }}<i class="layui-icon layui-icon-down"></i>
+    </a>
+</script>
+<script type="text/html" id="genderTemp">
+    <input type="checkbox" lay-skin="switch" lay-text="女|男" lay-filter="gender" {{ d.gender=='woman'?'checked':'' }}>
+</script>
+<script type="text/html" id="imageTemp">
+    {{# if (d.image) { }}
+    <img style="height: 28px; width: 28px; cursor: pointer" src="{{ d.image }}">
+    {{# } }}
+</script>
+<script type="text/html" id="educationTemp">
+    <a title="{{ d.education }}" class="layui-btn layui-btn-normal layui-btn-xs" lay-event="education">
+        {{ d.education }}<i class="layui-icon layui-icon-down"></i>
+    </a>
+</script>
+
+{% endverbatim %}
+
+<script type="text/html" id="barDemo">
+    <a title="历史" class="layui-btn layui-btn-primary layui-btn-xs" lay-event="history"><i
+            class="layui-icon">&#xe674;</i></a>
+    <a title="更新" class="layui-btn layui-btn-xs" lay-event="update"><i class="layui-icon">&#xe642;</i></a>
+    <a title="删除" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i></a>
+</script>
+
+<script>
+    layui.use(['laydate', 'layer'], function () {
+        var laydate = layui.laydate, //日期
+            layer = layui.layer, //弹层
+            table = layui.table, //表格
+            dropdown = layui.dropdown,
+            form = layui.form;
+
+        //执行一个 table 实例
+        table.render({
+            elem: '#demo'
+            , url: '{% url '[trainees]:info-info-record' %}'
+            , title: '记录'
+            , cellMinWidth: 105 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , toolbar: 'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+            , defaultToolbar: [{ //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                title: '搜索'
+                , layEvent: 'LAYTABLE_TIPS'
+                , icon: 'layui-icon-search'
+            }, 'filter', 'exports', 'print']
+            , totalRow: true //开启合计行
+            , cols: [ //表头
+                [
+                    {type: 'checkbox', fixed: 'left'},
+                    {
+                        field: 'id',
+                        width: '60',
+                        title: 'ID',
+                        sort: true,
+                        align: 'center',
+                        style: 'color: #009688',
+                        fixed: 'left'
+                    },
+                    {
+                        field: 'name',
+                        width: '100',
+                        title: '姓名',
+                        sort: true,
+                        align: 'center',
+                        style: 'color: rgb(1, 170, 237); cursor: pointer;',
+                        fixed: 'left'
+                    },
+                    {
+                        field: "orientation",
+                        width: "",
+                        title: '培养方向',
+                        sort: true,
+                        align: 'center',
+                        templet: '#orientationTemp'
+                    },
+                    {field: "lot", width: "", title: '批次', sort: true, edit: 'text'},
+                    {
+                        field: "entry_date",
+                        width: "",
+                        title: '入训日期',
+                        sort: true,
+                        align: 'center',
+                        style: 'color: #c2c2c2'
+                    },
+                    {field: "gender", width: "80", title: '性别', sort: true, align: 'center', templet: '#genderTemp'},
+                    {field: "nation", width: "80", title: '民族', sort: true, edit: 'text'},
+                    {field: "age", width: "80", title: '年龄', sort: true, edit: 'text'},
+                    {field: "politics_status", width: "", title: '政治面貌', sort: true, edit: 'text'},
+                    {field: "height", width: "80", title: '身高', sort: true, edit: 'text'},
+                    {field: "weight", width: "80", title: '体重', sort: true, edit: 'text'},
+
+                    {
+                        field: "none",
+                        width: "",
+                        title: '面部采集',
+                        sort: true,
+                        align: 'center',
+                        templet: '#imageTemp'
+                    },
+                    {field: "school", width: "", title: '毕业院校', sort: true, edit: 'text'},
+                    {field: "major", width: "", title: '专业', sort: true, edit: 'text'},
+                    {
+                        field: "education",
+                        width: "",
+                        title: '最高学历',
+                        sort: true,
+                        align: 'center',
+                        templet: '#educationTemp'
+                    },
+                    {field: "phone", width: "120", title: '联系电话', sort: true, align: 'center', style: 'color: #c2c2c2'},
+                    {field: "id_card", width: "", title: '身份证号码', sort: true, align: 'center', style: 'color: #c2c2c2'},
+                    {field: "address", width: "", title: '通讯地址', sort: true, edit: 'text'},
+                    {field: "education_experience", width: "", title: '主要教学经历', sort: true, align: 'center', style: 'color: #c2c2c2'},
+                    {field: "family_member", width: "", title: '主要家庭成员', sort: true, align: 'center', style: 'color: #c2c2c2'},
+                    {field: "emergency_contact", width: "", title: '紧急联系人', sort: true, align: 'center', style: 'color: #c2c2c2'},
+                    {field: "remark", width: "", title: '备注', sort: true, align: 'center', edit: true},
+                    {field: "none", fixed: 'right', width: '150', title: '操作', align: 'center', toolbar: '#barDemo',}
+                ]
+            ]
+            , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                , groups: 1
+                , limits: [10, 20, 50, 100]
+            }
+            , initSort: {
+                field: 'id'
+                , type: 'desc'
+            }
+        });
+
+        //监听单元格编辑
+        table.on('edit(test)', function (obj) {
+            var value = obj.value //得到修改后的值
+                , data = obj.data //得到所在行所有键值
+                , field = obj.field; //得到字段
+            doEdit(data.id, field, value)
+        });
+
+        //监听行双击事件
+        table.on('rowDouble(test)', function (obj) {
+            var currentCell = window.event.srcElement;
+            var id = obj.data.id;
+            var field;
+            if (currentCell.tagName === "DIV") {
+                field = currentCell.parentElement.getAttribute("data-field");
+            } else if (currentCell.tagName === "TD") {
+                field = currentCell.getAttribute("data-field");
+            } else if (currentCell.tagName === "SPAN") {
+                field = currentCell.parentElement.parentElement.getAttribute("data-field");
+            }
+            if (field == 'id' || field == "name") {
+                doUpdate(id)
+            }
+        });
+
+        //监听头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id)
+                , data = checkStatus.data; //获取选中的数据
+            switch (obj.event) {
+                case 'add':
+                    layer.msg("请于人员管理处添加")
+                    break;
+                case 'update':
+                    if (data.length === 0) {
+                        layer.msg('请选择一行');
+                    } else if (data.length > 1) {
+                        layer.msg('只能同时更新一个');
+                    } else {
+                        doUpdate(data[0].id)
+                    }
+                    break;
+                case 'delete':
+                    if (data.length === 0) {
+                        layer.msg('请选择删除行');
+                    } else {
+                        var delList = [];
+                        data.forEach(function (n) {
+                            delList.push(n.id)
+                        });
+                        //layer.alert(JSON.stringify(delList));
+                        doDel(JSON.stringify(delList))
+                    }
+                    break;
+                //自定义头工具栏右侧图标 - 提示
+                case 'LAYTABLE_TIPS':
+                    $("#search").toggle();
+                    $("#header").toggle();
+                    $("#field_title").toggle();
+                    break;
+            }
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                , layEvent = obj.event; //获得 lay-event 对应的值
+            if (layEvent == 'history') {
+                doHistory(obj.data.id);
+            } else if (layEvent == 'update') {
+                doUpdate(obj.data.id)
+            } else if (layEvent == 'del') {
+                doDel(obj.data.id);
+            } else {
+                var _this = $(this)
+                if (_this.children(".layui-icon-down").length) {
+                    // 下拉选择
+                    var dropdown_data;
+                    if (layEvent == 'orientation') {
+                        dropdown_data = [{
+                            title: '动画'
+                            , id: '1'
+                        }, {
+                            title: '模型'
+                            , id: '2'
+                        }, {
+                            title: '解算'
+                            , id: '3'
+                        }, {
+                            title: '灯光'
+                            , id: '4'
+                        }, {
+                            title: '制片'
+                            , id: '5'
+                        }]
+                    }else if(layEvent == 'education'){
+                        dropdown_data = [{
+                            title: '研究生'
+                            , id: '1'
+                        }, {
+                            title: '本科'
+                            , id: '2'
+                        }, {
+                            title: '大专'
+                            , id: '3'
+                        }, {
+                            title: '高中'
+                            , id: '4'
+                        }, {
+                            title: '其他'
+                            , id: '5'
+                        }]
+                    }
+
+
+                    dropdown.render({
+                        elem: this //触发事件的 DOM 对象
+                        , show: true //外部事件触发即显示
+                        , data: dropdown_data
+                        , click: function (menudata) {
+                            console.log(menudata)
+                            _this.html(menudata.title + '<i class="layui-icon layui-icon-down"></i>')
+                            doEdit(data.id, layEvent, menudata.id)
+                        }
+                        //, align: 'right' //右对齐弹出（v2.6.8 新增）
+                        , style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' //设置额外样式
+                    })
+                }
+
+            }
+        });
+
+        //监听性别操作
+        form.on('switch(gender)', function (obj) {
+
+            var cur_id = $(this).parents("tr").children("td[data-field=id]").text()
+            if (obj.elem.checked) {
+                doEdit(cur_id, "gender", "woman")
+            } else {
+                doEdit(cur_id, "gender", "man")
+                {#layer.tips('男', obj.othis);#}
+            }
+
+            {#/doEdit()#}
+        });
+
+        //将日期直接嵌套在指定容器中
+        laydate.render({
+            elem: '#dateReload'
+            , range: true
+            //,calendar: true //是否开启公历重要节日
+            , mark: { //标记重要日子
+            }
+        });
+
+        //底部信息
+        var footerTpl = lay('#footer')[0].innerHTML;
+        lay('#footer').html(layui.laytpl(footerTpl).render({}))
+            .removeClass('layui-hide');
+
+        //编辑
+        function doEdit(id, field, value) {
+            $.ajax({
+                type: 'post',
+                url: "{% url '[trainees]:info-info-edit' %}",
+                data: {
+                    "id": id,
+                    "field": field,
+                    "value": value,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                cache: false,
+                beforeSend: function () {
+                    this.layerIndex = layer.load(1, {
+                        shade: [0.1, '#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success: function (msg) {
+                    layer.closeAll('loading');
+                    if (msg.status === 'success') {
+                        layer.msg('修改成功！', {icon: 1});
+                    } else if (msg.status === 'error') {
+                        layer.msg('输入类型错误！', {icon: 5, shift: 6});
+                    } else if (msg.status === 'hint') {
+                        layer.msg('输入数值仅限于0-100！', {icon: 0, shift: 6});
+
+                    } else {
+                        layer.msg('没有编辑权限', {icon: 4, shift: 6});
+                    }
+                    {#table.reload('demo')#}
+                }
+            });
+        }
+
+        //历史
+        function doHistory(id) {
+            layer.msg('暂未开通')
+        }//更新
+        function doUpdate(id) {
+            layer.open({
+                type: 2,
+                title: '更新',
+                shadeClose: false,
+                maxmin: true,
+                area: ['80%', '85%'],
+                content: "{% url '[trainees]:info-info-update' %}?id=" + id,
+                end: function () {
+                    //关闭时做的事情
+                    table.reload('demo')
+                }
+            });
+        }
+
+        //删除
+        function doDel(ids) {
+            layer.alert('确定删除吗？', {
+                title: '提示'
+                , icon: 3 //0:感叹号 1：对号 2：差号 3：问号 4：小锁 5：哭脸 6：笑脸
+                , time: 0 //不自动关闭
+                , btn: ['是', '否']
+                , yes: function (index) {
+                    layer.close(index);
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url '[trainees]:info-info-del' %}",
+                        data: {"id": ids, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                        cache: false,
+                        success: function (msg) {
+                            if (msg.result) {
+                                layer.msg("删除成功", {icon: 1});
+                                table.reload('demo')
+                            } else {
+                                layer.msg("删除失败", {icon: 2});
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        //选择
+        function doChoice(url, id) {
+            layer.open({
+                type: 2,
+                title: '选择',
+                content: url + "?id=" + id,
+                {#shadeClose: false,#}
+                area: ['500px', '80%'],
+                end: function () {
+                    table.reload("demo");
+                }
+            });
+        }
+
+
+        //搜索框
+        var $ = layui.$, active = {
+            reload: function () {
+
+                var data = {};
+                $("#search input").each(function () {
+                    if ($(this).val()) {
+                        data[$(this).attr("name")] = $(this).val()
+                    }
+                })
+
+                //执行重载
+                table.reload('demo', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , where: {
+                        key: data
+                    }
+                }, 'data');
+            }
+        };
+        $('.searchTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        // 初始加载搜索
+        $("button[data-type=reload]").click();
+
+        // 监听链接单元格单击事件
+        $("body").on("click", "td", function () {
+            if ($(this).css("color") == "rgb(1, 170, 237)") {
+                var cur_name = $(this).parent().children().eq(2).text();
+                console.log(cur_name)
+                var field = $(this).attr("data-field");
+                if (field == "name") {
+                    window.parent.xadmin.add_tab(cur_name + ': 人员管理', '{% url '[trainees]:organization-personnel-index' %}?name=' + cur_name, true);
+                }
+            }
+        });
+        // th td显示
+        $("body").on("mouseenter", "th, td", function () {
+            if ($(this).text()) {
+                $("#footer").text($(this).text()).removeClass("layui-quote-nm")
+            } else {
+                $("#footer").text("空")
+            }
+        });
+        $("body").on("mouseleave", "th, td", function () {
+            $("#footer").text("HYQ v 0.1 储备生管理系统").addClass("layui-quote-nm")
+        });
+
+        // 打开相册
+        $("body").on("click", "td img", function () {
+            var cur_name = $(this).parents("tr").children().eq(2).text();
+            console.log(cur_name)
+            layer.photos({
+                photos: {
+                    "title": cur_name, //相册标题
+                    "start": 0, //初始显示的图片序号，默认0
+                    "data": [   //相册包含的图片，数组格式
+                        {
+                            "alt": cur_name,
+                            "pid": 0, //图片id
+                            "src": $(this).attr("src"), //原图地址
+                            "thumb": "" //缩略图地址
+                        }
+                    ]
+                }
+                , anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+            })
+        })
+    });
+</script>
+
+</body>
+</html>        
+        

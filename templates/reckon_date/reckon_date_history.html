@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>历史</title>
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}" media="all">
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .demo-carousel {
+            height: 200px;
+            line-height: 200px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<blockquote class="layui-elem-quote layui-text">
+    <h3>历史线</h3>
+</blockquote>
+{#<table class="layui-table">#}
+{#    <colgroup>#}
+{#        <col width="60%">#}
+{#        <col width="40%">#}
+{#    </colgroup>#}
+{#    <thead><tr><th>日期</th><th>状态</th></tr></thead>#}
+{#    <tbody>#}
+{#    {% for record in personnel_change_record %}#}
+{#    <tr><td>{{ record.0 }}</td><td>{{ record.1 }}</td></tr>#}
+{#    {% endfor %}#}
+{#    </tbody>#}
+{#</table>#}
+<ul class="layui-timeline">
+    {% for part in personnel_data %}
+    <li class="layui-timeline-item">
+        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+        <div class="layui-timeline-content layui-text">
+            <h3 style="cursor: pointer; user-select: none;" class="layui-timeline-title">{{ part.start_date }}</h3>
+            <div>
+                <p>第{{ forloop.counter }}阶段</p>
+                <ul>
+                    {% for change_record in part.personnel_change_record %}
+                    <li>{{ change_record.0 }} - {{ change_record.1 }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+    </li>
+    {% endfor %}
+    <li class="layui-timeline-item">
+        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+        <div class="layui-timeline-content layui-text">
+            <h3 style="cursor: pointer; user-select: none;" class="layui-timeline-title">{{ personnel_end_date }}</h3>
+            <div>
+                <p>结业: <em>过去{{ past_days }}天，剩余{{ remain_days }}天</em></p>
+            </div>
+        </div>
+    </li>
+</ul>
+
+
+<script src="{% static 'layui/layui.js' %}" charset="utf-8"></script>
+<script src="{% static 'jquery-3.4.1.js' %}" charset="utf-8"></script>
+<script>
+    $(function () {
+        $(".layui-timeline-title").click(function () {
+            $(this).next().toggle()
+        })
+        $(".layui-timeline-axis").click(function () {
+            $(this).next().find('div').toggle()
+        })
+    })
+</script>
+</body>
+</html>

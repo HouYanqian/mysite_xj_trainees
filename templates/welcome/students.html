@@ -1,0 +1,288 @@
+{% extends 'iframe_base.html' %}
+{% load static %}
+{% block custom_css %}
+    <style>
+        {#小标签靠右#}
+        .layuiadmin-badge {
+            position: absolute;
+            top: 12px;
+            right: 15px;
+            border: none;
+        }
+
+        .layuiadmin-badge:hover {
+            font-weight: bold;
+        }
+
+        .badge-left {
+            right: 40px;
+        }
+
+        .attendance-sign {
+            height: 507px;
+            text-align: center;
+        }
+
+        .attendance-sign .camera-circle {
+            position: absolute;
+            top: 80px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            height: 200px;
+            width: 200px;
+            border-radius: 100px;
+            background: #1E9FFF;
+            color: #fff;
+            box-shadow: 0px 4px 10px 2px rgb(30 159 255 / 40%)
+        }
+
+        .attendance-sign .camera-circle h1 {
+            margin-top: 80px;
+            margin-bottom: 10px;
+        }
+
+        .attendance-sign .camera-circle p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, .6);
+        }
+
+        {#修复图标偏移#}
+        .layui-btn .layui-icon {
+            margin-right: 0;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+
+            <div class="layui-col-sm12 layui-col-md2">
+
+                <div class="layui-card layui-card-badge">
+                    <div class="layui-card-header">考勤信息
+                        <button title="申请" class="layuiadmin-badge layui-btn layui-btn-normal layui-btn-xs"><i
+                                class="layui-icon layui-icon-log"></i>
+                        </button>
+                    </div>
+                    <div class="layui-card-body">
+                        <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
+                            {% for attendance in attendance_record %}
+                                <li class="layui-col-md12 layui-col-xs{% widthratio 6 attendance_record.count 1 %}">
+                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                        <h3>{% if attendance.start_time %}<i class="layui-icon layui-icon-camera-fill"
+                                                                             style="color: #1E9FFF"></i>{% endif %}{{ attendance.get_start_time_status }}
+                                        </h3>
+                                        <p><cite class="new-cite">上班{{ attendance.shift_start_time|date:'H:i' }}</cite>
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-md12 layui-col-xs{% widthratio 6 attendance_record.count 1 %}">
+                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                        <h3>{% if attendance.end_time %}<i class="layui-icon layui-icon-camera-fill"
+                                                                           style="color: #1E9FFF"></i>{% endif %}{{ attendance.get_end_time_status }}
+                                        </h3>
+                                        <p><cite class="new-cite">下班{{ attendance.shift_end_time|date:'H:i' }}</cite>
+                                        </p>
+                                    </a>
+                                </li>
+                            {% endfor %}
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md6">
+                <div class="layui-card layui-card-badge layui-card-active">
+                    <div class="layui-card-header">
+                        考勤打卡
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="attendance-sign">
+                            <div class="camera-circle">
+                                <div class="msg">
+                                    <h1>{{ status|default_if_none:'上班打卡' }}</h1>
+                                    <p></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md4">
+                <div class="layui-card layui-card-badge">
+                    <div class="layui-card-header">当月汇总
+                        <button class="layuiadmin-badge badge-left layui-btn layui-btn-primary layui-btn-xs"><i
+                                class="layui-icon layui-icon-left"></i>
+                        </button>
+                        <button class="layuiadmin-badge layui-btn layui-btn-primary layui-btn-xs"><i
+                                class="layui-icon layui-icon-right"></i>
+                        </button>
+                    </div>
+                    <div class="layui-card-body ">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-xs4 layui-col-md4">
+                                <div class="grid-demo"><h1>7.4</h1>
+                                    <p>平均(小时)</p></div>
+                            </div>
+                            <div class="layui-col-xs4 layui-col-md4">
+                                <div class="grid-demo"><h1>0</h1>
+                                    <p>迟到(次)</p></div>
+                            </div>
+                            <div class="layui-col-xs4 layui-col-md4">
+                                <div class="grid-demo"><h1>0</h1>
+                                    <p>早退(次)</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md4">
+                <div class="layui-card layui-card-badge">
+                    <div class="layui-card-header">每日记录</div>
+                    <div class="layui-card-body ">
+                        <div style="text-align: center" id="dailyAttendance"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm12">
+                <div class="layui-card">
+                    <div class="layui-card-header">阶段排班</div>
+                    <div class="layui-card-body ">
+                        <table class="layui-table">
+                            <thead>
+                            <tr>
+                                <th width="20%">暂未统计</th>
+                                <td width="50%"></td>
+                                <td width="30%"></td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th>Null</th>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-sm12">
+                <blockquote class="layui-elem-quote layui-quote-nm">HYQ v 0.1 储备生管理系统</a>
+                </blockquote>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block custom_js %}
+    <script type="text/html" id="dailyFooterTemp">
+        <a title="上班" class="daily-btn">17:46</a>
+        <a title="下班" class="daily-btn">未打卡</a>
+        <a title="上班" class="daily-btn color-yellow">未打卡</a>
+        <a title="下班" class="daily-btn">未打卡</a>
+    </script>
+    <script type="text/javascript">
+        var cur_date, cur_time;
+
+        //得到时间并写入div
+        function getDate() {
+            //获取当前时间
+            var date = new Date();
+            cur_date = date.toLocaleDateString();
+
+            cur_time = date.toTimeString();
+
+            //格式化为本地时间格式
+            cur_time = cur_time.substr(0, cur_time.indexOf(" GMT"))
+
+            //将时间写入
+            $(".camera-circle .msg p").text(cur_time);
+        }
+
+        //使用定时器每秒向div写入当前时间
+        getDate()
+        setInterval("getDate()", 1000);
+
+        $(".camera-circle").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url '[attendance]:attendance_record-add' %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                cache: false,
+                success: function (msg) {
+                    if (msg.status === 'success') {
+                        layer.alert('打卡成功！', {icon: 1}, function (index) {
+                            parent.location.reload(); //关闭所有弹窗
+                        });
+                    } else if (msg.status === 'fail') {
+                        layer.msg(msg.form_errors, {icon: 5, shift: 6});
+                    }
+                }
+            });
+        })
+
+        // 学生端隐藏左边栏
+        if (parent.$('.left-nav').css('width') == '220px') {
+            parent.$('.container .left_open i').click()
+        }
+    </script>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart1 = echarts.init(document.getElementById('main1'));
+
+        // 指定图表的配置项和数据
+        var option1 = {{ axis_option|safe }};
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart1.setOption(option1);
+        myChart1.getZr().on('click', function (event) {
+            // 该监听器正在监听一个`zrender 事件`。
+            console.log(event)
+        });
+
+        var myChart2 = echarts.init(document.getElementById('main2'));
+
+        // 指定图表的配置项和数据
+        var option2 = {{ pie_option|safe }};
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart2.setOption(option2);
+    </script>
+    <script>
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+
+            var dailyDate = laydate.render({
+                elem: "#dailyAttendance",
+                position: "static",
+                theme: "#1E9FFF", //主题颜色
+                //showBottom: false, //不显示底部工具栏
+                btns: [],
+                change: function (value, date) {
+                    dailyStatus(value)
+                },
+                ready: function (date) {
+                    dailyStatus(date.year + "-" + date.month + "-" + date.date)
+                }
+            });
+
+            function dailyStatus(date) {
+                // 月异常信息
+                $("#dailyAttendance td").each(function () {
+                    if (!$(this).hasClass("laydate-day-prev") && !$(this).hasClass("laydate-day-next")) {
+                        $(this).append($('<span class="layui-badge-dot layui-bg-orange"></span>'))
+                    }
+                })
+                // 底部显示
+                $("#dailyAttendance .layui-laydate-footer").html($("#dailyFooterTemp").html())
+            }
+        });
+
+    </script>
+
+{% endblock %}

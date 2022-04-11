@@ -1,0 +1,253 @@
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+#bubbles {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #1E9FFF;
+    position: absolute;
+}
+
+#intro {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    z-index: 2;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+#intro .layui-input {
+    border-radius: 19px;
+    height: 38px;
+    border: 1px solid rgba(255, 255, 255, .4);
+    background-color: rgba(255, 255, 255, .2);
+    color: #fff;
+    -webkit-transition-duration: .25s;
+    transition-duration: .25s;
+}
+
+#intro .layui-input:hover {
+    background-color: rgba(255, 255, 255, .4);
+
+}
+
+#intro .layui-input:focus {
+    border-radius: 1px;
+    border: 1px solid rgba(255, 255, 255, .4);
+    background-color: #fff;
+    color: #333
+}
+
+#intro .layui-form-select dd:not(.layui-this) {
+    color: #333;
+}
+
+#intro .layui-input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+    color: rgba(255, 255, 255, .4);
+}
+
+#intro .layui-input:-moz-placeholder, textarea:-moz-placeholder {
+    color: rgba(255, 255, 255, .4);
+}
+
+#intro .layui-input::-moz-placeholder, textarea::-moz-placeholder {
+    color: rgba(255, 255, 255, .4);
+}
+
+#intro .layui-input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+    color: rgba(255, 255, 255, .4);
+}
+
+#intro textarea {
+    border-radius: 19px;
+    border: 1px solid rgba(255, 255, 255, .4);
+    background-color: rgba(255, 255, 255, .2);
+    color: #fff;
+    -webkit-transition-duration: .25s;
+    transition-duration: .25s;
+    resize: none;
+}
+
+#intro textarea:hover {
+    background-color: rgba(255, 255, 255, .4);
+}
+
+#intro textarea:focus {
+    border-radius: 1px;
+    border: 1px solid rgba(255, 255, 255, .4);
+    background-color: #fff;
+    color: #333;
+}
+
+#intro .layui-elem-field:not(.layui-field-title) {
+    border-color: rgba(255, 255, 255, .2);
+}
+
+#intro .layui-elem-field:not(.layui-field-title) legend {
+    font-size: 8px;
+    color: rgba(255, 255, 255, .4);
+    margin-bottom: 10px;
+}
+
+#intro .layui-elem-field:not(.layui-field-title) .layui-field-box {
+    padding: 0px 0px;
+}
+
+#intro .layui-btn {
+    width: 80px;
+    box-shadow: 1px 2px 3px 0px #333;
+}
+
+#intro .layui-btn:hover {
+    box-shadow: 0px 0px 1px 0px #333;
+}
+
+#intro .layui-table, #intro .layui-table th, #intro .layui-table td {
+    background-color: transparent;
+    border: none;
+}
+
+
+#intro .layui-table tr:hover {
+    background-color: rgba(255, 255, 255, .2);
+}
+
+#intro .layui-btn-group .layui-btn {
+    width: 24px;
+}
+
+#intro .layui-slider-bar {
+    box-shadow: 0px 0px 1px 0px #333;
+}
+#intro .slider-custom {
+    margin-top: 10px
+}
+/*#intro .slider-custom .layui-slider {*/
+/*    background: rgba(255, 255, 255, .4);*/
+/*}*/
+#intro .slider-tips-custom {
+    color: rgba(255, 255, 255, .8);
+    position:relative;
+    top: 5px;
+    height: 30px;
+}
+#intro .slider-tips-custom span {
+    color: #fff;
+
+}
+/*swiper改动*/
+.swiper-pagination {
+    --swiper-theme-color: #1E9FFF;
+}
+
+.swiper-pagination-progressbar {
+    background: #ffffff !important;
+}
+
+/*layui改动*/
+.layui-form-radio > i:hover, .layui-form-radioed > i {
+    color: #ffffff;
+}
+
+.layui-upload .layui-upload-img {
+    border-radius: 19px;
+    width: 190px;
+    height: 190px;
+    line-height: 190px;
+    border: 1px solid rgba(255, 255, 255, .4);
+    background-color: rgba(255, 255, 255, .2);
+}
+
+.layui-upload .layui-upload-img:hover {
+    background-color: rgba(255, 255, 255, .4);
+}
+.layui-upload .layui-upload-img:hover label.layui-upload-ico i {
+    color: rgba(255, 255, 255, .4);
+}
+
+.layui-upload .layui-upload-img label.layui-upload-ico {
+    position: absolute;
+    display: block;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+}
+
+.layui-upload .layui-upload-img label.layui-upload-ico i {
+    font-size: 30px;
+    color: rgba(255, 255, 255, .4);
+}
+
+.layui-upload .layui-upload-img img {
+    border-radius: 19px;
+    width: 190px;
+    height: 190px;
+    border: none;
+}
+/*form {*/
+/*    padding: 20px 0;*/
+/*    position: relative;*/
+/*    z-index: 2*/
+/*}*/
+
+/*form input {*/
+/*    -webkit-appearance: none;*/
+/*    -moz-appearance: none;*/
+/*    appearance: none;*/
+/*    outline: 0;*/
+/*    border: 1px solid rgba(255, 255, 255, .4);*/
+/*    background-color: rgba(255, 255, 255, .2);*/
+/*    width: 30%;*/
+/*    border-radius: 3px;*/
+/*    padding: 8px 15px;*/
+/*    margin: 10px 10px;*/
+/*    display: block;*/
+/*    text-align: center;*/
+/*    font-size: 15px;*/
+/*    color: #fff;*/
+/*    -webkit-transition-duration: .2s;*/
+/*    transition-duration: .2s;*/
+/*    font-weight: 300*/
+/*}*/
+
+/*form input:hover {*/
+/*    background-color: rgba(255, 255, 255, .4)*/
+/*}*/
+
+/*form input:focus {*/
+/*    background-color: #fff;*/
+/*    color: #333*/
+/*}*/
+/*form input:hover {*/
+
+/*    width: 40%;*/
+/*}*/
+
+/*form button {*/
+/*    -webkit-appearance: none;*/
+/*    -moz-appearance: none;*/
+/*    appearance: none;*/
+/*    outline: 0;*/
+/*    background-color: #fff;*/
+/*    border: 0;*/
+/*    padding: 8px 15px;*/
+/*    color: #333;*/
+/*    border-radius: 3px;*/
+/*    width: 200px;*/
+/*    cursor: pointer;*/
+/*    font-family: microsoft yahei, Arial, sans-serif;*/
+/*    font-size: 16px;*/
+/*    font-weight: 700;*/
+/*    -webkit-transition-duration: .25s;*/
+/*    transition-duration: .25s*/
+/*}*/
+
+/*form button:hover {*/
+/*    background-color: #f5f7f9*/
+/*}*/

@@ -1,0 +1,256 @@
+{% extends 'iframe_base.html' %}
+{% load static %}
+{% block custom_css %}
+    <style>
+        {#小标签靠右#}
+        .layuiadmin-badge {
+            top: 50%;
+            margin-top: -9px;
+            position: absolute;
+            right: 15px;
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-sm12">
+                <div class="layui-card">
+                    <div class="layui-card-header">人员管理
+                    </div>
+
+                    <div class="layui-card-body">
+                        <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
+                            <li class="layui-col-md3 layui-col-xs6">
+                                <a onclick="window.parent.xadmin.add_tab('人员管理', '{% url '[trainees]:organization-personnel-index' %}')"
+                                   class="x-admin-backlog-body">
+                                    <h3>新注册</h3>
+                                    <p>
+                                        <cite class="color-green">{{ new_personnel_count }}</cite>
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="layui-col-md3 layui-col-xs6">
+                                <a onclick="window.parent.xadmin.add_tab('面试指标', '{% url '[trainees]:info-interview-index' %}')"
+                                   class="x-admin-backlog-body">
+                                    <h3>已录入</h3>
+                                    <p>
+                                        <cite class="color-yellow">{{ trainees_interview_count }}</cite>
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="layui-col-md3 layui-col-xs6 ">
+                                <a onclick="window.parent.xadmin.add_tab('基本信息', '{% url '[trainees]:info-info-index' %}')"
+                                   class="x-admin-backlog-body">
+                                    <h3>已面试</h3>
+                                    <p>
+                                        <cite class="color-red">{{ trainees_info_count }}</cite>
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="layui-col-md3 layui-col-xs6">
+                                <a onclick="window.parent.xadmin.add_tab('人员排班', '')" class="x-admin-backlog-body">
+                                    <h3>已排班</h3>
+                                    <p>
+                                        <cite class="color-darkgray">{{ scheduling_count }}</cite></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card layui-card-badge layui-card-active">
+                    <div class="layui-card-header">考勤信息
+                        <span class="layui-badge layui-bg-blue layuiadmin-badge">日</span></div>
+                    <div class="layui-card-body  ">
+                        <p class="layuiadmin-big-font"><span id="yesterday_count">{{ yesterday_count }}</span>
+                            <i class="layui-icon layui-icon-form"></i>
+                        </p>
+                        <p>---
+                            <span class="layuiadmin-span-color {% if yesterday_comparable > 0 %}color-red{% else %}color-green{% endif %}">{{ yesterday_comparable|floatformat:2 }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card layui-card-badge">
+                    <div class="layui-card-header">考勤信息
+                        <span class="layui-badge layui-bg-orange layuiadmin-badge">周</span></div>
+                    <div class="layui-card-body ">
+                        <p class="layuiadmin-big-font"><span id="last_week_count">{{ last_week_count }}</span>
+                            <i class="layui-icon layui-icon-form"></i>
+                        </p>
+                        <p>---
+                            <span class="layuiadmin-span-color {% if last_week_comparable > 0 %}color-red{% else %}color-green{% endif %}">{{ last_week_comparable|floatformat:2 }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card layui-card-badge">
+                    <div class="layui-card-header">考勤信息
+                        <span class="layui-badge layuiadmin-badge">月</span></div>
+                    <div class="layui-card-body ">
+                        <p class="layuiadmin-big-font"><span id="last_month_count">{{ last_month_count }}</span>
+                            <i class="layui-icon layui-icon-form"></i>
+                        </p>
+                        <p>---
+                            <span class="layuiadmin-span-color {% if last_week_comparable > 0 %}color-red{% else %}color-green{% endif %}">{{ last_week_comparable|floatformat:2 }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card layui-card-badge">
+                    <div class="layui-card-header">考勤信息
+                        <span class="layui-badge layui-bg-cyan layuiadmin-badge">季</span></div>
+                    <div class="layui-card-body ">
+                        <p class="layuiadmin-big-font"><span id="last_quarter_count">{{ last_quarter_count }}</span>
+                            <i class="layui-icon layui-icon-form"></i>
+                        </p>
+                        <p>---
+                            <span class="layuiadmin-span-color {% if last_quarter_comparable > 0 %}color-red{% else %}color-green{% endif %}">{{ last_quarter_comparable|floatformat:2 }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm12">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        图形统计
+                        <div class="layui-btn-group layuiadmin-btn-group">
+                            <a href="javascript:;" class="layui-btn layui-btn-xs"
+                               onclick="get_data()">考勤</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-primary layui-btn-xs">绩效</a>
+                        </div>
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="layui-row">
+                            <div class="layui-col-md8">
+                                <div id="main1" style="width: 100%; height: 400px;"></div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div id="main2" style="width: 100%; height: 400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm12">
+                <div class="layui-card">
+                    <div class="layui-card-header">列表统计</div>
+                    <div class="layui-card-body ">
+                        <table class="layui-table">
+                            <thead>
+                            <tr>
+                                <th width="20%">暂未统计</th>
+                                <td width="50%"></td>
+                                <td width="30%"></td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th>Null</th>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-sm12">
+                <blockquote class="layui-elem-quote layui-quote-nm">HYQ v 0.1 储备生管理系统</a>
+                </blockquote>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block custom_js %}
+    <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/extension/bmap.min.js"></script>
+
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart1 = echarts.init(document.getElementById('main1'));
+
+        // 指定图表的配置项和数据
+        var option1 = {{ axis_option|safe }};
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart1.setOption(option1);
+        myChart1.getZr().on('click', function (event) {
+            // 该监听器正在监听一个`zrender 事件`。
+            console.log(event)
+        });
+
+        var myChart2 = echarts.init(document.getElementById('main2'));
+
+        // 指定图表的配置项和数据
+        var option2 = {{ pie_option|safe }};
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart2.setOption(option2);
+    </script>
+
+    <script>
+        layui.use('layer');
+
+        // 图标重载
+        function get_data() {
+            var period = $(".layui-card-active .layuiadmin-badge").text(),
+                type = $(".x-admin-backlog-body-active h3").text();
+            console.log(period, type)
+            $.ajax({
+                type: "post",
+                url: "",
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'period': period,
+                    'type': type,
+                },
+                cache: false,
+                success: function (msg) {
+                    if (msg.status === 'success') {
+                        myChart1.clear();
+                        myChart1.setOption(msg.axis_option);
+                        myChart2.setOption(msg.pie_option);
+                        $("#touch_count").text(msg.touch_count)
+                        $("#access_count").text(msg.access_count)
+                        $("#yesterday_count").text(msg.yesterday_count)
+                        $("#last_week_count").text(msg.last_week_count)
+                        $("#last_month_count").text(msg.last_month_count)
+                        $("#last_quarter_count").text(msg.last_quarter_count)
+                    } else if (msg.status === 'fail') {
+                        layer.msg("生成错误，信息不全！", {icon: 5});
+                    }
+                }
+            });
+        }
+
+        // 点击访问量
+        $(".x-admin-backlog-body").click(function () {
+            if ($(this).find('h3').text() == "访问量" || $(this).find('h3').text() == "点击量") {
+                $(".x-admin-backlog-body-active").removeClass("x-admin-backlog-body-active");
+                $(this).addClass("x-admin-backlog-body-active");
+                get_data()
+            } else {
+                layer.msg('"' + $(this).find('h3').text() + '" 尚未对接')
+            }
+
+
+        });
+        // 点击周期
+        $(".layui-card-badge").click(function () {
+            $(".layui-card-badge").removeClass("layui-card-active");
+            $(this).addClass("layui-card-active");
+            get_data()
+        })
+    </script>
+
+{% endblock %}

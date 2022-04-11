@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>更新</title>
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}" media="all">
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .layui-laydate-content > .layui-laydate-list {
+            padding-bottom: 0;
+            overflow: hidden;
+        }
+
+        .layui-laydate-content > .layui-laydate-list > li {
+            width: 50%;
+        }
+
+        .merge-box .scrollbox .merge-list {
+            padding-bottom: 5px;
+        }
+
+    </style>
+</head>
+<body>
+<blockquote class="layui-elem-quote layui-text">
+    <h3>更新</h3>
+</blockquote>
+
+<form id="addForm" class="layui-form" action="">
+    {% csrf_token %}
+    <input name="id" hidden value="{{ attendance_group_record.id }}">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">考勤组名</label>
+            <div class="layui-input-inline">
+                <input placeholder="考勤组名" type="text" name="title" lay-verify="required"
+                       class="layui-input"
+                       value="{{ attendance_group_record.title }}">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline" id="shift">
+            <label class="layui-form-label">考勤班次</label>
+            <div class="layui-input-inline">
+                <input id="time-range1" name="shift1" type="text" class="layui-input" lay-verify="required"
+                       placeholder="班次1" value="{{ shift.0 }}">
+            </div>
+            <a title="新增班次" class="layui-btn-sm" href="javascript:;"{% if shift.1 %} style="display: none"{% endif %}>
+                <i class="layui-icon layui-icon-add-1"></i>
+            </a>
+            <div class="layui-input-inline"{% if not shift.1 %} style="display: none"{% endif %}>
+                <input id="time-range2" name="shift2" type="text" class="layui-input" placeholder="班次2" value="{{ shift.1 }}">
+            </div>
+            <a title="删除班次" class="layui-btn-sm" href="javascript:;"{% if not shift.1 %} style="display: none"{% endif %}>
+                <i class="layui-icon layui-icon-delete"></i>
+            </a>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">考勤人员</label>
+        <div class="layui-input-block">
+            <div id="personnel" class="demo-transfer"></div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script src="{% static 'layui/layui.js' %}" charset="utf-8"></script>
+<script src="{% static 'jquery-3.4.1.js' %}" charset="utf-8"></script>
+{% if get_only %}
+    <script>
+        var get_only = "{{ get_only }}";
+        $("#" + get_only).parents(".layui-form-item").siblings().hide()
+        $("button[type=submit]").parents(".layui-form-item").show()
+        $("button[type=submit]").next().hide()
+    </script>
+{% endif %}
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'transfer'], function () {
+        var form = layui.form
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , transfer = layui.transfer;
+
+        //日期时间范围
+        laydate.render({
+            elem: "#time-range1"
+            , type: 'time'
+            , range: true
+            , format: 'HH:mm'
+            , value: '08:30 - 17:30'
+            , isInitValue: false
+
+        })
+        laydate.render({
+            elem: "#time-range2"
+            , type: 'time'
+            , range: true
+            , format: 'HH:mm'
+            , value: '08:30 - 17:30'
+            , isInitValue: false
+        })
+
+        //监听提交
+        form.on('submit(demo1)', function () {
+            var data = $("#addForm").serialize();
+            data += "&personnel="
+            $.each(transfer.getData('transfer'), function (index, value) {
+                data += value.value + ", "
+            })
+            $.ajax({
+                type: "post",
+                url: "{% url '[attendance]:attendance_group-update' %}",
+                data: data,
+                cache: false,
+                beforeSend: function () {
+                    this.layerIndex = layer.load(1, {
+                        shade: [0.1, '#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success: function (msg) {
+                    layer.closeAll('loading');
+                    if (msg.status === 'success') {
+                        layer.alert('更新成功！', {icon: 1}, function (index) {
+                            parent.layer.closeAll(); //关闭所有弹窗
+                        });
+                    } else if (msg.status === 'fail') {
+                        layer.msg(msg.form_errors, {icon: 5, shift: 6});
+                    }
+                }
+            });
+            return false;
+        });
+        form.verify({
+            ip: function (value) {
+                if (value && !/^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$/.test(value)) {
+                    return 'ip地址格式错误';
+                }
+            },
+        });
+
+        // 人员穿梭框
+        transfer.render({
+            elem: '#personnel'
+            , id: 'transfer'
+            , title: ['未加入', '待加入']  //自定义标题
+            , data: {{ personnel_data|safe }}
+            , value: {{ record_personnel_data|safe }}
+            , showSearch: true
+            , text: {
+                none: '尚未添加考勤人员' //没有数据时的文案
+                , searchNone: '未搜到' //搜索无匹配数据时的文案
+            }
+        })
+
+    });
+
+
+</script>
+<script>
+    // 点击新增按钮
+    $(".layui-icon-add-1").parent().on("click", function () {
+        $(this).next().next().show()
+        $(this).next().show()
+        $(this).hide()
+        $(this).next().children().attr("lay-verify", "required")
+
+    })
+    // 点击删除行
+    $(".layui-icon-delete").parent().on("click", function () {
+        $(this).prev().prev().show()
+        $(this).prev().hide()
+        $(this).hide()
+        $(this).prev().children().removeAttr("lay-verify").val('')
+    })
+</script>
+
+</body>
+</html>

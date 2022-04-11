@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>角色管理</title>
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}" media="all">
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        tr:hover {
+            color: rgb(1, 170, 237);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<blockquote id="header" class="layui-elem-quote layui-text">
+    <div class="layui-inline">
+        <h3>角色管理</h3>
+    </div>
+    <div class="layui-inline" style="float: right;">
+        <div class="layui-btn-group">
+            <a id="reload" href="javascript:location.reload();" class="layui-btn layui-btn-sm"><i
+                    class="layui-icon layui-icon-refresh"></i></a>
+        </div>
+    </div>
+</blockquote>
+
+<table class="layui-table" style="text-align: center" lay-skin="line">
+    <colgroup>
+        <col width="60">
+        <col width="120">
+        <col>
+    </colgroup>
+    <thead>
+    <tr>
+        <th style="text-align: center">ID</th>
+        <th style="text-align: center">角色</th>
+        <th style="text-align: center">人数</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for record in role_records %}
+        <tr>
+            <td>{{ record.id }}</td>
+            <td>{{ record.title }}</td>
+            <td>{{ record.get_user_list.count }}</td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+<blockquote class="layui-elem-quote layui-quote-nm layui-hide" id="footer">HYQ {{ layui.v }} v 0.1 储备生管理系统</blockquote>
+
+<script src="{% static 'jquery-3.4.1.js' %}" charset="utf-8"></script>
+<script src="{% static 'layui/layui.js' %}" charset="utf-8"></script>
+<script>
+    $("tr").click(function () {
+        var id = $(this).children().first().text();
+        doUpdate(id);
+    })
+
+    //更新
+    function doUpdate(id) {
+        var url = "{% url '[rbac]:role-update' %}?id=" + id
+        layer.open({
+            type: 2,
+            title: '更新',
+            shadeClose: false,
+            maxmin: true,
+            area: ['80%', '85%'],
+            content: url,
+        });
+    }
+</script>
+</body>
+</html>        
+        
